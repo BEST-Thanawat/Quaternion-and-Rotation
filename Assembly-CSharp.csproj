@@ -64,10 +64,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\InputMaster.cs" />
-    <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\EnemyFieldOfView.cs" />
     <Compile Include="Assets\Scripts\FieldOfView.cs" />
     <Compile Include="Assets\Scripts\FieldOfViewEditor.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidBody\Enemy.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidBody\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerFieldOfView.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
