@@ -344,3 +344,5 @@ healthchecksdb
 /Assets/Materials
 /Assets/Scenes
 /Assets/SimpleIcons
+/Assets/InputMaster.inputactions
+/Assets/InputMaster.cs
