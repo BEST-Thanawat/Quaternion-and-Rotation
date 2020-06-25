@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
+using static InputMaster;
 
 public class Player : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class Player : MonoBehaviour
 
     //New Input System
     private InputMaster controls;
-    private Keyboard kb;
+    private Keyboard keyboard;
+    private Mouse mouse;
 
     Rigidbody rigidbody;
 
@@ -21,9 +23,8 @@ public class Player : MonoBehaviour
     private Vector2 movementInput;
     private Vector3 movement;
     private float speed = 4.5f;
-    private Vector3 inputDirection;
-
-   
+    private Vector3 dirKeyBoardToMove;
+    
     //Turn
     private Vector2 turnInput;
     [Header("Rotation")]
@@ -40,16 +41,25 @@ public class Player : MonoBehaviour
     private Vector3 groundLocation;
     public float GroundCheckDistance = 1.3f;
 
+    //Click to move
+    [SerializeField] private GameObject instance;
+    private InputAction.CallbackContext contextClickToMove;
+    private RaycastHit hit;
+    private bool trigClickToMove;
+    private Vector3 dirClickToMove;
+
+    private IEnumerator clickToMove;
     private void Awake()
     {
         controls = new InputMaster();
-        controls.Player.Shoot.performed += context => Shoot();
+        controls.Player.ClickToMove.performed += context => contextClickToMove = context;
         controls.Player.Movement.performed += context => movementInput = context.ReadValue<Vector2>();
         controls.Player.Turn.performed += context => turnInput = context.ReadValue<Vector2>();
         controls.Player.Jump.performed += context => contextJump = context;//OnAttack(context); //isJump = context.ReadValue<float>();
         //controls.Player.Jump.performed += context => Jump(context.ReadValue<float>(), jumpForce, forceMode);
 
-        kb = InputSystem.GetDevice<Keyboard>();
+        keyboard = InputSystem.GetDevice<Keyboard>();
+        mouse = InputSystem.GetDevice<Mouse>();
         //Vector2 pos = Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue());
     }
     
@@ -62,28 +72,17 @@ public class Player : MonoBehaviour
     private void Update()
     {
         GroundCheck();
+        MovePlayerByMouse();
     }
 
     private void GroundCheck()
     {
         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * 10f, Color.blue);
         Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * GroundCheckDistance));
-        RaycastHit hit;
+        RaycastHit raycastHit;
         //if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity))
-        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hit, GroundCheckDistance))
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out raycastHit, GroundCheckDistance))
         {
-
-            //if (string.Compare(hit.collider.tag, "Ground", StringComparison.Ordinal) == 0)
-            //{
-            //    groundLocation = hit.point;
-            //}
-
-            //var distanceFromPlayerToGround = Vector3.Distance(transform.position, groundLocation);
-            //if (distanceFromPlayerToGround >= GroundCheckDistance) //1.1f
-            //{
-            //    isJumping = true;
-            //}
-            //Debug.Log(distanceFromPlayerToGround);
             isJumping = false;
         }
         else
@@ -94,44 +93,24 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        MoveThePlayer();
-        TurnThePlayer();
+        MovePlayerByKeyBoard();
+
+        if (!trigClickToMove)
+        {
+            RotatePlayer();
+        }
+
+        if (trigClickToMove)
+        {
+            ClickToMove(hit);
+        }
 
         if (!isJumping)
         {
             Jump(contextJump, jumpForce, forceMode);
         }
         isJumping = false;
-        //Jump(isJump, jumpForce, ForceMode.Impulse);
-        //if (kb.spaceKey.isPressed)
-        //{
-        //    //Debug.Log(kb.spaceKey.isPressed);
-        //    //Cursor.lockState = CursorLockMode.None;
-        //    Jump(jumpForce, forceMode);
-        //}
     }
-
-    //void OnJump(InputAction.CallbackContext context)
-    //{
-    //    switch (context.phase)
-    //    {
-    //        case InputActionPhase.Started:
-    //            /* the space key was pressed */
-    //            Debug.Log("the space key was pressed");
-    //            isJump = true;
-    //            break;
-
-    //        case InputActionPhase.Performed:
-    //            /* the space key was held for 3 seconds */
-    //            Debug.Log("the space key was performed");
-    //            break;
-
-    //        case InputActionPhase.Canceled:
-    //            /* the space key was released; if there was no 'Performed', it was released before 3 seconds were up */
-    //            Debug.Log("the space key was released");
-    //            break;
-    //    }
-    //}
 
     private void Jump(InputAction.CallbackContext context, float jumpForce, ForceMode forceMode)
     {
@@ -153,21 +132,82 @@ public class Player : MonoBehaviour
             //    break;
         }
     }
-    private void MoveThePlayer()
+    private void MovePlayerByMouse()
     {
+        if (Mouse.current.leftButton.isPressed && !isJumping)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue()); //contextClickToMove.ReadValue<Vector2>()
+            if (Physics.Raycast(ray, out hit))
+            {
+                trigClickToMove = true;
+            }
+        }
+
+        ////Prefer this way to move character
+        //var targetInput = new Vector3(movementInput.x, 0, movementInput.y);
+        //inputDirection = Vector3.Lerp(inputDirection, targetInput, Time.deltaTime * 10f);
+
+        //movement.Set(inputDirection.x, 0f, inputDirection.z);
+        //movement = movement * speed * Time.deltaTime;
+        //rigidbody.MovePosition(transform.position + movement);
+    }
+    private void ClickToMove(RaycastHit raycastHit)
+    {
+        //Debug.Log(Vector3.Distance(transform.position, raycastHit.point));
+        if (Vector3.Distance(transform.position, raycastHit.point) > 1f && trigClickToMove)
+        {
+            var targetInput = transform.InverseTransformPoint(raycastHit.point);
+            dirClickToMove = Vector3.Lerp(dirClickToMove, targetInput, Time.deltaTime * speed);
+            rigidbody.MovePosition(Vector3.MoveTowards(transform.position, raycastHit.point, Time.deltaTime * speed)); //Time.deltaTime * dirClickToMove.magnitude
+
+            //Rotate to target
+            float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
+            float turnAmount = Mathf.Atan2(targetInput.x, targetInput.z);
+            Quaternion deltaRotation = Quaternion.Euler(0, turnAmount * turnSpeed * Time.deltaTime, 0);
+            rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
+        }
+        else
+        {
+            trigClickToMove = false;
+        }
+    }
+
+    //***Click to move using coroutine
+    //IEnumerator ClickToMove(RaycastHit raycastHit)
+    //{
+    //    while (Vector3.Distance(transform.position, raycastHit.point) > 1f) //(Vector3.Distance(raycastHit.point, transform.position) > 1f)
+    //    {
+    //        //Debug.Log("Click " + raycastHit.point.x + " " + "Pos " + transform.position.x);
+    //        //Instantiate(instance, hit.point, Quaternion.identity);
+    //        var targetInput = transform.InverseTransformPoint(raycastHit.point);
+
+    //        rigidbody.MovePosition(Vector3.MoveTowards(transform.position, raycastHit.point, targetInput.magnitude * Time.deltaTime));
+    //        yield return null;
+    //    }
+
+    //    if (Vector3.Distance(transform.position, raycastHit.point) <= 1f)
+    //        isMove = false;
+    //}
+
+    private void MovePlayerByKeyBoard()
+    {
+        //if (isJumping) return;
+        if (movementInput != Vector2.zero) trigClickToMove = false;
+
         //Prefer this way to move character
         var targetInput = new Vector3(movementInput.x, 0, movementInput.y);
-        inputDirection = Vector3.Lerp(inputDirection, targetInput, Time.deltaTime * 10f);
+        dirKeyBoardToMove = Vector3.Lerp(dirKeyBoardToMove, targetInput, Time.deltaTime * speed);
 
-        movement.Set(inputDirection.x, 0f, inputDirection.z);
+        movement.Set(dirKeyBoardToMove.x, 0f, dirKeyBoardToMove.z);
         movement = movement * speed * Time.deltaTime;
-        rigidbody.MovePosition(transform.position + movement);
+        if (movement != Vector3.zero) rigidbody.MovePosition(transform.position + movement);
+        else rigidbody.angularVelocity = Vector3.zero; //Stop rotate in case of mouse pointer is null
 
         //Other way to move character
         //rigidbody.MovePosition(transform.position + Time.deltaTime * speed * transform.TransformDirection(movementInput.x, 0, movementInput.y));
     }
 
-    private void TurnThePlayer()
+    private void RotatePlayer()
     { 
         Quaternion deltaRotation = Quaternion.identity;
         Ray ray = Camera.main.ScreenPointToRay(turnInput);
