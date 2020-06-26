@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,10 +35,11 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
     {
         KeyboardPressedValue = contextKeyboardPressed.ReadValue<Vector2>();
         MousePositionValue = mouse.position.ReadValue();
-        
+
         if (keyboard.wKey.isPressed)
         {
             PressedW = true;
+            KeyboardPressedValue.y = OptimizeValue(KeyboardPressedValue.y);
         }
         else
         {
@@ -47,6 +49,7 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
         if (keyboard.aKey.isPressed)
         {
             PressedA = true;
+            KeyboardPressedValue.x = OptimizeValue(KeyboardPressedValue.x);
         }
         else
         {
@@ -56,6 +59,7 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
         if (keyboard.sKey.isPressed)
         {
             PressedS = true;
+            KeyboardPressedValue.y = OptimizeValue(KeyboardPressedValue.y);
         }
         else
         {
@@ -65,6 +69,7 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
         if (keyboard.dKey.isPressed)
         {
             PressedD = true;
+            KeyboardPressedValue.x = OptimizeValue(KeyboardPressedValue.x);
         }
         else
         {
@@ -79,6 +84,18 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
         {
             PressedLShift = false;
         }
+    }
+    private float OptimizeValue(float value)
+    {
+        if (value < 0)
+        {
+            value = value < -0.7f ? -1f : value;
+        }
+        else
+        {
+            value = value > 0.7f ? 1f : value;
+        }
+        return value;
     }
 
     private void OnEnable() => inputMaster.Player.Enable();

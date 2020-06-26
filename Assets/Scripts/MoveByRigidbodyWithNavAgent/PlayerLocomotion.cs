@@ -17,18 +17,15 @@ public class PlayerLocomotion : CharacterStateBase
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //if (!VirtualInputManager.Instance.PressedW && !VirtualInputManager.Instance.PressedS)
-        //{
-        //    animator.SetFloat(TransitionParameter.Forward.ToString(), 0f, 0.1f, Time.deltaTime);
-        //    return;
-        //}
         var targetInput = new Vector3(VirtualInputManager.Instance.KeyboardPressedValue.x, 0, VirtualInputManager.Instance.KeyboardPressedValue.y);
         if (VirtualInputManager.Instance.PressedLShift)
         {
+            targetInput.x *= 1f;
             targetInput.z *= 1f;
         }
         else
         {
+            targetInput.x *= 0.5f;
             targetInput.z *= 0.5f;
         }
 
@@ -41,11 +38,6 @@ public class PlayerLocomotion : CharacterStateBase
         }
         else
         {
-            //if (forwardLerp == 0f) return;
-
-            //forwardLerp = Mathf.Lerp(forwardLerp, 0, timeLerpForward);
-            //timeLerpForward += 0.1f * Time.deltaTime;
-            //animator.SetFloat(TransitionParameter.Forward.ToString(), forwardLerp, 0.1f, Time.deltaTime);
             animator.SetFloat(TransitionParameter.Forward.ToString(), 0, 0.1f, Time.deltaTime);
         }
 
@@ -58,46 +50,8 @@ public class PlayerLocomotion : CharacterStateBase
         }
         else
         {
-            //if (turnLerp == 0f) return;
-
-            //turnLerp = Mathf.Lerp(turnLerp, 0, timeLerpTurn);
-            //timeLerpTurn += 0.1f * Time.deltaTime;
             animator.SetFloat(TransitionParameter.Turn.ToString(), 0, 0.1f, Time.deltaTime);
         }
-
-        //if (!VirtualInputManager.Instance.PressedW && !VirtualInputManager.Instance.PressedS)
-        //{
-        //    animator.SetBool(TransitionParameter.Move.ToString(), false);
-        //    return;
-        //}
-
-        //if (VirtualInputManager.Instance.PressedW)
-        //{
-        //    animator.SetBool(TransitionParameter.Move.ToString(), true);
-        //}
-
-        //if (VirtualInputManager.Instance.PressedS)
-        //{
-        //    animator.SetBool(TransitionParameter.Move.ToString(), true);
-        //}
-
-        //if (VirtualInputManager.Instance.PressedA)
-        //{
-        //    animator.SetFloat(TransitionParameter.Turn.ToString(), -1f);
-        //}
-        //else
-        //{
-        //    animator.SetFloat(TransitionParameter.Turn.ToString(), 0f);
-        //}
-
-        //if (VirtualInputManager.Instance.PressedD)
-        //{
-        //    animator.SetFloat(TransitionParameter.Turn.ToString(), 1f);
-        //}
-        //else
-        //{
-        //    animator.SetFloat(TransitionParameter.Turn.ToString(), 0f);
-        //}
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
