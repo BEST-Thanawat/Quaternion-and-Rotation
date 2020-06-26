@@ -346,3 +346,6 @@ healthchecksdb
 /Assets/SimpleIcons
 /Assets/InputMaster.inputactions
 /Assets/InputMaster.cs
+/Assets/Akishaqs/Characters
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/VirtualInputManager.prefab
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/LiamAnimator.controller
