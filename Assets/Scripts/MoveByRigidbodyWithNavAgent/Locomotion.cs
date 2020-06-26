@@ -1,22 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
-public class PlayerLocomotion : CharacterStateBase
+[CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/Locomotion")]
+public class Locomotion : StateData
 {
+    //public float Speed;
+
     private float forwardLerp;
     private float turnLerp;
     private static float timeLerpForward = 0.0f;
     private static float timeLerpTurn = 0.0f;
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void UpdateAbility(CharacterState characterStateBase, Animator animator)
     {
+        CharacterControl c = characterStateBase.GetCharacterControl(animator);
 
-    }
-
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
         var targetInput = new Vector3(VirtualInputManager.Instance.KeyboardPressedValue.x, 0, VirtualInputManager.Instance.KeyboardPressedValue.y);
         if (VirtualInputManager.Instance.PressedLShift)
         {
@@ -53,22 +52,4 @@ public class PlayerLocomotion : CharacterStateBase
             animator.SetFloat(TransitionParameter.Turn.ToString(), 0, 0.1f, Time.deltaTime);
         }
     }
-
-    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-
-    }
-
-    // OnStateMove is called right after Animator.OnAnimatorMove()
-    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that processes and affects root motion
-    //}
-
-    // OnStateIK is called right after Animator.OnAnimatorIK()
-    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that sets up animation IK (inverse kinematics)
-    //}
 }

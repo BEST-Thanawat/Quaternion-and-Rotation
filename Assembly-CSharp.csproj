@@ -75,12 +75,12 @@
     <Compile Include="Assets\Scripts\MoveByRigidBody\Player.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterControl.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterManager.cs" />
-    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterStateBase.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterState.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\EnemyNA.cs" />
-    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerIdle.cs" />
-    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerLocomotion.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Locomotion.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerNA.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Singleton.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateData.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\VirtualInputManager.cs" />
     <None Include="Assets\Akishaqs\Characters\Liam v2\Demo v2\DemoStuff\Raleway\OFL.txt" />
     <Reference Include="UnityEngine">
