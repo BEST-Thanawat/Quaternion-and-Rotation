@@ -9,17 +9,32 @@ public class CharacterState : StateMachineBehaviour
 
     private CharacterControl characterControl;
 
-    public void UpdateAll(CharacterState characterStateBase, Animator animator)
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         foreach (StateData d in ListAbilityData)
         {
-            d.UpdateAbility(characterStateBase, animator);
+            d.OnEnter(this, animator, stateInfo);
+        }
+    }
+    
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        UpdateAll(this, animator, stateInfo);
+    }
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        foreach (StateData d in ListAbilityData)
+        {
+            d.OnExit(this, animator, stateInfo);
         }
     }
 
-    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public void UpdateAll(CharacterState characterStateBase, Animator animator, AnimatorStateInfo stateInfo)
     {
-        UpdateAll(this, animator);
+        foreach (StateData d in ListAbilityData)
+        {
+            d.UpdateAbility(characterStateBase, animator, stateInfo);
+        }
     }
 
     public CharacterControl GetCharacterControl(Animator animator)

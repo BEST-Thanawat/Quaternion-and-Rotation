@@ -77,11 +77,17 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterManager.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterState.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\EnemyNA.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\KeyboardInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Locomotion.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Locomotion2.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\ManualInput.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\MouseInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerNA.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Singleton.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateData.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\VirtualInputManager.cs" />
+    <None Include="Assets\Humanoid_Characters\Mobility_Pro_Combo\Demo_Scene_Animation_README.txt" />
+    <None Include="Assets\Humanoid_Characters\Mobility_Pro_Combo\MotusMan_v4_Avatar_README.txt" />
     <None Include="Assets\Akishaqs\Characters\Liam v2\Demo v2\DemoStuff\Raleway\OFL.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -652,6 +658,12 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+    </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>

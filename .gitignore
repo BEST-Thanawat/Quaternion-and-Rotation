@@ -349,3 +349,6 @@ healthchecksdb
 /Assets/Akishaqs/Characters
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/VirtualInputManager.prefab
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/LiamAnimator.controller
+/Assets/Humanoid_Characters
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/LiamAnimator2.controller
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/Locomotion2.asset

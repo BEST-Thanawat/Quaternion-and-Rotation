@@ -5,10 +5,22 @@ using UnityEngine;
 public enum TransitionParameter
 {
     Turn,
-    Forward
+    Forward,
+    Jump
 }
 public class CharacterControl : MonoBehaviour
 {
     public float Speed;
     public Animator CharacterAnimator;
+
+    public bool PressedW;
+    public bool PressedA;
+    public bool PressedS;
+    public bool PressedD;
+    public bool PressedC;
+    public bool PressedLShift;
+    public Vector2 MousePositionValue;
+    public Vector2 KeyboardPressedValue;
+    public Vector2 RotateValue;
+    public bool Jump;
 }
