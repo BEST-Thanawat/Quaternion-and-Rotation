@@ -14,12 +14,9 @@ public class Locomotion2 : StateData
     private static float timeLerpTurn = 0.0f;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-        //throw new System.NotImplementedException();
+
     }
-    public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
-    {
-        //throw new System.NotImplementedException();
-    }
+
     public override void UpdateAbility(CharacterState characterStateBase, Animator animator, AnimatorStateInfo stateInfo)
     {
         CharacterControl characterControl = characterStateBase.GetCharacterControl(animator);
@@ -59,5 +56,15 @@ public class Locomotion2 : StateData
         {
             animator.SetFloat(TransitionParameter.Turn.ToString(), 0, 0.1f, Time.deltaTime);
         }
+
+        if (characterControl.Jump)
+        {
+            animator.SetBool(TransitionParameter.Jump.ToString(), true);
+        }
+    }
+
+    public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+        //throw new System.NotImplementedException();
     }
 }

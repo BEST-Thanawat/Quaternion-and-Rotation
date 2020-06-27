@@ -352,3 +352,6 @@ healthchecksdb
 /Assets/Humanoid_Characters
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/LiamAnimator2.controller
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/Locomotion2.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_Landing_ForceTransition.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_Landing.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_ForceTransition.asset

@@ -21,6 +21,7 @@ public class CharacterState : StateMachineBehaviour
     {
         UpdateAll(this, animator, stateInfo);
     }
+
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         foreach (StateData d in ListAbilityData)

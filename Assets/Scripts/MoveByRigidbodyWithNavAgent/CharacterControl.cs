@@ -6,7 +6,8 @@ public enum TransitionParameter
 {
     Turn,
     Forward,
-    Jump
+    Jump,
+    ForceTransition
 }
 public class CharacterControl : MonoBehaviour
 {
@@ -23,4 +24,17 @@ public class CharacterControl : MonoBehaviour
     public Vector2 KeyboardPressedValue;
     public Vector2 RotateValue;
     public bool Jump;
+
+    private Rigidbody rigid;
+    public Rigidbody RIGID_BODY
+    {
+        get
+        {
+            if(rigid == null)
+            {
+                rigid = GetComponent<Rigidbody>();
+            }
+            return rigid;
+        }
+    }
 }
