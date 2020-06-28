@@ -355,3 +355,11 @@ healthchecksdb
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_Landing_ForceTransition.asset
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_Landing.asset
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_ForceTransition.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_W_Jump_Landing_ForceTransition.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_W_Jump_Landing.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_W_Jump_GroundDetector.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_W_Jump_ForceTransition.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_W_Jump.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_GroundDetector.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump.asset
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/ColliderEdge.prefab

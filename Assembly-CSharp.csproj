@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerNA.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Singleton.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\ForceTransition.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\GroundDetector.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Jump.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Landing.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Locomotion.cs" />
@@ -623,6 +624,9 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
@@ -653,6 +657,9 @@
     <Reference Include="Unity.Rider.Editor">
       <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.ProBuilder.AddOns.Editor">
       <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
     </Reference>
@@ -661,12 +668,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Cinemachine">
-      <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>J:/Unity 2020/Understanding/Quaternion and Rotation/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>
