@@ -45,6 +45,14 @@ public class Locomotion2 : StateData
             animator.SetFloat(TransitionParameter.Forward.ToString(), 0, 0.1f, Time.deltaTime);
         }
 
+        if (characterControl.PressedW)
+        {
+            if (characterControl.Jump)
+            {
+                animator.SetBool(TransitionParameter.Jump.ToString(), true);
+            }
+        }
+
         if (characterControl.PressedA || characterControl.PressedD)
         {
             //animator.SetFloat(TransitionParameter.Forward.ToString(), 1f, 0.1f, Time.deltaTime);
@@ -57,10 +65,18 @@ public class Locomotion2 : StateData
             animator.SetFloat(TransitionParameter.Turn.ToString(), 0, 0.1f, Time.deltaTime);
         }
 
-        if (characterControl.Jump)
-        {
-            animator.SetBool(TransitionParameter.Jump.ToString(), true);
-        }
+        //if(characterControl.PressedW || characterControl.PressedS || characterControl.PressedA || characterControl.PressedD)
+        //{
+        //    animator.SetBool(TransitionParameter.Move.ToString(), true);
+        //}
+        //else
+        //{
+        //    animator.SetBool(TransitionParameter.Move.ToString(), false);
+        //    if (characterControl.Jump)
+        //    {
+        //        animator.SetBool(TransitionParameter.Jump.ToString(), true);
+        //    }
+        //}        
     }
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)

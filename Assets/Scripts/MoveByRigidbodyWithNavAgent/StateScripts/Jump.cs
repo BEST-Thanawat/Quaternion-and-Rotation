@@ -18,6 +18,6 @@ public class Jump : StateData
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-
+        animator.SetBool(TransitionParameter.Jump.ToString(), false);
     }
 }

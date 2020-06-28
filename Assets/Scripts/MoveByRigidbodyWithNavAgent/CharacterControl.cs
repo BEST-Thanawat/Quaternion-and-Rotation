@@ -7,9 +7,14 @@ public enum TransitionParameter
 {
     Turn,
     Forward,
-    Jump,
     ForceTransition,
-    Grounded
+    Grounded,
+    WalkForward,
+    WalkBackward,
+    StrafeLeft,
+    StrafeRight,
+    Jump,
+    Run
 }
 public class CharacterControl : MonoBehaviour
 {

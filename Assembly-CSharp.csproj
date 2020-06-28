@@ -85,10 +85,16 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Singleton.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\ForceTransition.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\GroundDetector.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Idle.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Jump.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Landing.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Locomotion.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Locomotion2.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Run.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeLeft.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeRight.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkBackward.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkForward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\VirtualInputManager.cs" />
     <None Include="Assets\Humanoid_Characters\Mobility_Pro_Combo\Demo_Scene_Animation_README.txt" />
     <None Include="Assets\Humanoid_Characters\Mobility_Pro_Combo\MotusMan_v4_Avatar_README.txt" />

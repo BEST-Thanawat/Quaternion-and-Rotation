@@ -363,3 +363,4 @@ healthchecksdb
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump_GroundDetector.asset
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/P_Jump.asset
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/ColliderEdge.prefab
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/States
