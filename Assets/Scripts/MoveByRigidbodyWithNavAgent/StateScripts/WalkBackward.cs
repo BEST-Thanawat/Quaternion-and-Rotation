@@ -5,10 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/WalkBackward")]
 public class WalkBackward : StateData
 {
-    private float forwardLerp;
-    private float turnLerp;
-    private static float timeLerpForward = 0.0f;
-    private static float timeLerpTurn = 0.0f;
+    public float BlockDistance;
+
+    //private float forwardLerp;
+    //private float turnLerp;
+    //private static float timeLerpForward = 0.0f;
+    //private static float timeLerpTurn = 0.0f;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -36,7 +38,10 @@ public class WalkBackward : StateData
 
         if (characterControl.PressedS)
         {
-            animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+            if (CheckBack(characterControl))
+            {
+                animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+            }
         }
 
         if (characterControl.PressedD)
@@ -53,5 +58,18 @@ public class WalkBackward : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
+    }
+    bool CheckBack(CharacterControl control)
+    {
+        foreach (GameObject o in control.BackSpheres)
+        {
+            Debug.DrawRay(o.transform.position, -control.transform.forward * 0.3f, Color.yellow);
+            RaycastHit hit;
+            if (Physics.Raycast(o.transform.position, -control.transform.forward, out hit, BlockDistance))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/StrafeLeft")]
 public class StrafeLeft : StateData
 {
+    public float BlockDistance;
+
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -31,7 +33,10 @@ public class StrafeLeft : StateData
 
         if (characterControl.PressedA)
         {
-            animator.SetBool(TransitionParameter.StrafeLeft.ToString(), true);
+            if (CheckLeft(characterControl))
+            {
+                animator.SetBool(TransitionParameter.StrafeLeft.ToString(), true);
+            }
         }
         else
         {
@@ -65,5 +70,18 @@ public class StrafeLeft : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
+    }
+    bool CheckLeft(CharacterControl control)
+    {
+        foreach (GameObject o in control.LeftSpheres)
+        {
+            Debug.DrawRay(o.transform.position, -control.transform.right * 0.3f, Color.yellow);
+            RaycastHit hit;
+            if (Physics.Raycast(o.transform.position, -control.transform.right, out hit, BlockDistance))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
