@@ -42,6 +42,8 @@ public class CharacterControl : MonoBehaviour
     public List<GameObject> RightSpheres = new List<GameObject>();
     public float GroundCheckOffset = 0.02f;
 
+    public List<Collider> RagdollParts = new List<Collider>();
+
     [Header("Gravity")]
     public float GravityMultiplier;
     public float PullMultiplier;
@@ -60,6 +62,49 @@ public class CharacterControl : MonoBehaviour
     }
 
     private void Awake()
+    {
+        //SetRagdollParts();
+        SetColliderSpheres();
+
+        //StartCoroutine(Start());
+    }
+
+    //IEnumerator Start()
+    //{
+    //    yield return new WaitForSeconds(5f);
+    //    RIGID_BODY.AddForce(200f * Vector3.up);
+    //    yield return new WaitForSeconds(0.5f);
+    //    TurnOnRagdoll();
+    //}
+    private void TurnOnRagdoll()
+    {
+        RIGID_BODY.useGravity = false;
+        RIGID_BODY.velocity = Vector3.zero;
+        this.gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        CharacterAnimator.enabled = false;
+        CharacterAnimator.avatar = null;
+
+        foreach (Collider c in RagdollParts)
+        {
+            c.isTrigger = false;
+            c.attachedRigidbody.velocity = Vector3.zero;
+        }
+    }
+
+    private void SetRagdollParts()
+    {
+        Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
+        foreach (Collider c in colliders)
+        {
+            if (c.gameObject != this.gameObject)
+            {
+                c.isTrigger = true;
+                RagdollParts.Add(c);
+            }
+        }
+    }
+
+    private void SetColliderSpheres()
     {
         CapsuleCollider capsule = GetComponent<CapsuleCollider>();
 
@@ -121,14 +166,13 @@ public class CharacterControl : MonoBehaviour
         //Create children spheres
         float horSec = (bottomFront.transform.position - bottomBack.transform.position).magnitude / 3f;
         CreateMiddleSpheres(bottomFront, -this.transform.forward, horSec, 2, BottomSpheres);
-        float verSec = (bottomFront.transform.position - topFront.transform.position).magnitude / 4f;
-        CreateMiddleSpheres(bottomFront, this.transform.up, verSec, 3, FrontSpheres);
-        CreateMiddleSpheres(bottomBack, this.transform.up, verSec, 3, BackSpheres);
+        float verSec = (bottomFront.transform.position - topFront.transform.position).magnitude / 3f;
+        CreateMiddleSpheres(bottomFront, this.transform.up, verSec, 2, FrontSpheres);
+        CreateMiddleSpheres(bottomBack, this.transform.up, verSec, 2, BackSpheres);
 
-        CreateMiddleSpheres(bottomLeft, this.transform.up, verSec, 3, LeftSpheres);
-        CreateMiddleSpheres(bottomRight, this.transform.up, verSec, 3, RightSpheres);
+        CreateMiddleSpheres(bottomLeft, this.transform.up, verSec, 2, LeftSpheres);
+        CreateMiddleSpheres(bottomRight, this.transform.up, verSec, 2, RightSpheres);
     }
-
     private void FixedUpdate()
     {
         if (RIGID_BODY.velocity.y < 0f)

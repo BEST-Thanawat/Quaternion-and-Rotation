@@ -6,7 +6,7 @@ using UnityEngine;
 public class WalkForward : StateData
 {
     public float BlockDistance;
-
+    private bool self;
     //private float forwardLerp;
     //private float turnLerp;
     //private static float timeLerpForward = 0.0f;
@@ -112,11 +112,21 @@ public class WalkForward : StateData
     {
         foreach (GameObject o in control.FrontSpheres)
         {
+            self = false;
             Debug.DrawRay(o.transform.position, control.transform.forward * 0.3f, Color.yellow);
             RaycastHit hit;
             if (Physics.Raycast(o.transform.position, control.transform.forward, out hit, BlockDistance))
             {
-                return true;
+                foreach (Collider c in control.RagdollParts)
+                {
+                    if(c.gameObject == hit.collider.gameObject)
+                    {
+                        self = true;
+                        break;
+                    }
+                }
+
+                if (!self) return true;
             }
         }
         return false;
