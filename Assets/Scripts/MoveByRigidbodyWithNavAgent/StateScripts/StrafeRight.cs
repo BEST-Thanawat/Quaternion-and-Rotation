@@ -20,9 +20,45 @@ public class StrafeRight : StateData
             return;
         }
 
+        if (characterControl.PressedW)
+        {
+            animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.WalkForward.ToString(), false);
+        }
+
+        if (characterControl.PressedA)
+        {
+            animator.SetBool(TransitionParameter.StrafeLeft.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.StrafeLeft.ToString(), false);
+        }
+
+        if (characterControl.PressedS)
+        {
+            animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.WalkBackward.ToString(), false);
+        }
+
         if (characterControl.PressedD)
         {
             animator.SetBool(TransitionParameter.StrafeRight.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.StrafeRight.ToString(), false);
+        }
+
+        if (characterControl.PressedC)
+        {
+            animator.SetBool(TransitionParameter.Crouch.ToString(), true);
         }
     }
 

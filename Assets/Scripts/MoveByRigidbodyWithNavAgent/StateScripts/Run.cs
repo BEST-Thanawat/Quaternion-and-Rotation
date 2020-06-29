@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/Run")]
 public class Run : StateData
 {
+    public float BlockDistance;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -22,7 +23,10 @@ public class Run : StateData
 
         if (characterControl.PressedLShift)
         {
-            animator.SetBool(TransitionParameter.Run.ToString(), true);
+            if (CheckFront(characterControl))
+            {
+                animator.SetBool(TransitionParameter.Run.ToString(), true);
+            }
         }
 
         if (characterControl.Jump)
@@ -34,5 +38,18 @@ public class Run : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
+    }
+    bool CheckFront(CharacterControl control)
+    {
+        foreach (GameObject o in control.FrontSpheres)
+        {
+            Debug.DrawRay(o.transform.position, control.transform.forward * 0.3f, Color.yellow);
+            RaycastHit hit;
+            if (Physics.Raycast(o.transform.position, control.transform.forward, out hit, BlockDistance))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

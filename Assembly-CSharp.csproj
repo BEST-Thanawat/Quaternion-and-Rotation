@@ -83,6 +83,9 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\MouseInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerNA.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Singleton.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Crouch.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchBackward.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchForward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\ForceTransition.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\GroundDetector.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Idle.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Run.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeLeft.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeRight.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Toggle.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkBackward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkForward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\VirtualInputManager.cs" />

@@ -38,20 +38,24 @@ public class GroundDetector : StateData
 
     bool IsGrounded(CharacterControl control)
     {
-        if(control.RIGID_BODY.velocity.y >= -0.01f && control.RIGID_BODY.velocity.y <= 0f)
+        if(control.RIGID_BODY.velocity.y >= -0.001f && control.RIGID_BODY.velocity.y <= 0f)
         {
             return true;
         }
 
-        foreach (GameObject o in control.BottomSpheres)
-        {
-            Debug.DrawRay(o.transform.position, Vector3.down * 0.7f, Color.yellow);
-            RaycastHit hit;
-            if (Physics.Raycast(o.transform.position, Vector3.down, out hit, Distance))
+        //if (control.RIGID_BODY.velocity.y < 0f)
+        //{
+            foreach (GameObject o in control.BottomSpheres)
             {
-                return true;
+                Debug.DrawRay(o.transform.position, Vector3.down * 0.7f, Color.yellow);
+                RaycastHit hit;
+                if (Physics.Raycast(o.transform.position, Vector3.down, out hit, Distance))
+                {
+                    return true;
+                }
             }
-        }
+        //}
+
         return false;
     }
 }

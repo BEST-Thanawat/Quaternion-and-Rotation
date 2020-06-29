@@ -5,13 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/Idle")]
 public class Idle : StateData
 {
-    private float forwardLerp;
-    private float turnLerp;
-    private static float timeLerpForward = 0.0f;
-    private static float timeLerpTurn = 0.0f;
+    //private float forwardLerp;
+    //private float turnLerp;
+    //private static float timeLerpForward = 0.0f;
+    //private static float timeLerpTurn = 0.0f;
+
+    //[Range(0.01f, 1f)]
+    //public float CheckTime;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-
+        animator.SetBool(TransitionParameter.Jump.ToString(), false);
     }
 
     public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -39,6 +42,14 @@ public class Idle : StateData
             animator.SetBool(TransitionParameter.Jump.ToString(), true);
         }
 
+        //if(stateInfo.normalizedTime >= CheckTime)
+        //{
+        if (characterControl.PressedC)
+        {
+            animator.SetBool(TransitionParameter.Crouch.ToString(), true);
+        }
+        //}
+        
         //if (characterControl.PressedLShift)
         //{
         //    targetInput.x *= 1f;

@@ -24,9 +24,29 @@ public class WalkBackward : StateData
             return;
         }
 
+        if (characterControl.PressedW)
+        {
+            animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
+        }
+
+        if (characterControl.PressedA)
+        {
+            animator.SetBool(TransitionParameter.StrafeLeft.ToString(), true);
+        }
+
         if (characterControl.PressedS)
         {
             animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+        }
+
+        if (characterControl.PressedD)
+        {
+            animator.SetBool(TransitionParameter.StrafeRight.ToString(), true);
+        }
+
+        if (characterControl.Jump)
+        {
+            animator.SetBool(TransitionParameter.Jump.ToString(), true);
         }
     }
 

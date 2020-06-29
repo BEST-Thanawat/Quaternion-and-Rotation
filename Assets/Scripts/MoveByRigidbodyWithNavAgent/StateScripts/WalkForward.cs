@@ -5,10 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/WalkForward")]
 public class WalkForward : StateData
 {
-    private float forwardLerp;
-    private float turnLerp;
-    private static float timeLerpForward = 0.0f;
-    private static float timeLerpTurn = 0.0f;
+    public float BlockDistance;
+
+    //private float forwardLerp;
+    //private float turnLerp;
+    //private static float timeLerpForward = 0.0f;
+    //private static float timeLerpTurn = 0.0f;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -26,7 +28,30 @@ public class WalkForward : StateData
 
         if (characterControl.PressedW)
         {
-            animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
+            if (CheckFront(characterControl))
+            {
+                animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
+            }
+        }
+
+        if (characterControl.PressedA)
+        {
+            animator.SetBool(TransitionParameter.StrafeLeft.ToString(), true);
+        }
+
+        if (characterControl.PressedS)
+        {
+            animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+        }
+
+        if (characterControl.PressedD)
+        {
+            animator.SetBool(TransitionParameter.StrafeRight.ToString(), true);
+        }
+
+        if (characterControl.PressedC)
+        {
+            animator.SetBool(TransitionParameter.Crouch.ToString(), true);
         }
 
         if (characterControl.Jump)
@@ -38,6 +63,7 @@ public class WalkForward : StateData
         {
             animator.SetBool(TransitionParameter.Run.ToString(), true);
         }
+        
         //var targetInput = new Vector3(characterControl.KeyboardPressedValue.x, 0, characterControl.KeyboardPressedValue.y);
         //if (characterControl.PressedLShift)
         //{
@@ -81,5 +107,18 @@ public class WalkForward : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
         //animator.SetBool(TransitionParameter.ForceTransition.ToString(), false);
+    }
+    bool CheckFront(CharacterControl control)
+    {
+        foreach (GameObject o in control.FrontSpheres)
+        {
+            Debug.DrawRay(o.transform.position, control.transform.forward * 0.3f, Color.yellow);
+            RaycastHit hit;
+            if (Physics.Raycast(o.transform.position, control.transform.forward, out hit, BlockDistance))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
