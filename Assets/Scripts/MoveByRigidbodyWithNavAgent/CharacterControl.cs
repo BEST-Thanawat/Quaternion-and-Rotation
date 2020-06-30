@@ -16,7 +16,8 @@ public enum TransitionParameter
     StrafeRight,
     Jump,
     Run,
-    Crouch
+    Crouch,
+    Attack
 }
 public class CharacterControl : MonoBehaviour
 {
@@ -47,6 +48,10 @@ public class CharacterControl : MonoBehaviour
     [Header("Gravity")]
     public float GravityMultiplier;
     public float PullMultiplier;
+
+    [Header("Attack")]
+    public bool Attack;
+    public Vector3 ClickPosition;
 
     private Rigidbody rigid;
     public Rigidbody RIGID_BODY

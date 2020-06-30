@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,6 @@ using UnityEngine;
 public class WalkForward : StateData
 {
     public float BlockDistance;
-    private bool self;
     //private float forwardLerp;
     //private float turnLerp;
     //private static float timeLerpForward = 0.0f;
@@ -112,23 +112,34 @@ public class WalkForward : StateData
     {
         foreach (GameObject o in control.FrontSpheres)
         {
-            self = false;
             Debug.DrawRay(o.transform.position, control.transform.forward * BlockDistance, Color.yellow);
             RaycastHit hit;
             if (Physics.Raycast(o.transform.position, control.transform.forward, out hit, BlockDistance))
             {
-                foreach (Collider c in control.RagdollParts)
+                if (!control.RagdollParts.Contains(hit.collider))
                 {
-                    if(c.gameObject == hit.collider.gameObject)
+                    if (!IsBodyPart(hit.collider))
                     {
-                        self = true;
-                        break;
+                        Debug.Log(true);
+                        return true;
                     }
                 }
-
-                if (!self) return true;
             }
         }
+        return false;
+    }
+
+    private bool IsBodyPart(Collider collider)
+    {
+        CharacterControl characterControl = collider.transform.root.GetComponent<CharacterControl>();
+
+        if (characterControl == null) return false;
+        if (characterControl.gameObject == collider.gameObject) return false;
+        if (characterControl.RagdollParts.Contains(collider))
+        {
+            return true;
+        }
+
         return false;
     }
 }

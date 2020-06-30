@@ -5,11 +5,11 @@ using UnityEngine.InputSystem;
 
 public class MouseInput : MonoBehaviour
 {
-    [SerializeField] public float MovingTurnSpeed = 360;
-    [SerializeField] public float StationaryTurnSpeed = 180;
-    [SerializeField] public float ForwardAmount = 1f;
+    public float MovingTurnSpeed = 360;
+    public float StationaryTurnSpeed = 180;
+    public float ForwardAmount = 1f;
+    public CharacterControl characterControl;
 
-    private CharacterControl characterControl;
     private Mouse mouse;
     private InputMaster inputMaster;
     private InputAction.CallbackContext contextClickToMove;
@@ -18,7 +18,7 @@ public class MouseInput : MonoBehaviour
     private Rigidbody rb;
     private void Awake()
     {
-        characterControl = this.gameObject.GetComponent<CharacterControl>();
+        //characterControl = this.gameObject.GetComponent<CharacterControl>();
 
         mouse = new Mouse();
         mouse = InputSystem.GetDevice<Mouse>();
@@ -41,6 +41,23 @@ public class MouseInput : MonoBehaviour
     {
         VirtualInputManager.Instance.MousePositionValue = mouse.position.ReadValue();
         VirtualInputManager.Instance.RotateValue = rotateValue;
+
+        if (Mouse.current.leftButton.isPressed)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit))
+            {
+                //Debug.Log(hit.point);
+                VirtualInputManager.Instance.Attack = true;
+                VirtualInputManager.Instance.ClickPosition = hit.point;
+            }
+        }
+        else
+        {
+            VirtualInputManager.Instance.Attack = false;
+            VirtualInputManager.Instance.ClickPosition = Vector3.zero;
+        }
     }
     private void FixedUpdate()
     {

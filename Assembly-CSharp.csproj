@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\MouseInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PlayerNA.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Singleton.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Attack.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Crouch.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchBackward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchForward.cs" />
@@ -100,8 +101,9 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkBackward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkForward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\VirtualInputManager.cs" />
-    <None Include="Assets\Humanoid_Characters\Mobility_Pro_Combo\Demo_Scene_Animation_README.txt" />
-    <None Include="Assets\Humanoid_Characters\Mobility_Pro_Combo\MotusMan_v4_Avatar_README.txt" />
+    <None Include="Assets\Animation\Humanoid_Characters\Mobility_Pro_Combo\Demo_Scene_Animation_README.txt" />
+    <None Include="Assets\Animation\Humanoid_Characters\Mobility_Pro_Combo\MotusMan_v4_Avatar_README.txt" />
+    <None Include="Assets\Animation\FightingAnimsetPro\readme.txt" />
     <None Include="Assets\Akishaqs\Characters\Liam v2\Demo v2\DemoStuff\Raleway\OFL.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

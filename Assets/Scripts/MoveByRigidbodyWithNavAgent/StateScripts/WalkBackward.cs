@@ -67,9 +67,29 @@ public class WalkBackward : StateData
             RaycastHit hit;
             if (Physics.Raycast(o.transform.position, -control.transform.forward, out hit, BlockDistance))
             {
-                return true;
+                if (!control.RagdollParts.Contains(hit.collider))
+                {
+                    if (!IsBodyPart(hit.collider))
+                    {
+                        Debug.Log(true);
+                        return true;
+                    }
+                }
             }
         }
+        return false;
+    }
+    private bool IsBodyPart(Collider collider)
+    {
+        CharacterControl characterControl = collider.transform.root.GetComponent<CharacterControl>();
+
+        if (characterControl == null) return false;
+        if (characterControl.gameObject == collider.gameObject) return false;
+        if (characterControl.RagdollParts.Contains(collider))
+        {
+            return true;
+        }
+
         return false;
     }
 }

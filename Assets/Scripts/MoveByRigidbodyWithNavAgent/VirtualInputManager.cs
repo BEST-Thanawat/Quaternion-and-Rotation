@@ -18,4 +18,5 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
     public bool Jump;
 
     public bool Attack;
+    public Vector3 ClickPosition;
 }

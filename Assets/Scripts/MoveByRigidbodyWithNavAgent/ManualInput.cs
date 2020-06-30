@@ -78,5 +78,16 @@ public class ManualInput : MonoBehaviour
         {
             characterControl.Jump = false;
         }
+
+        if (VirtualInputManager.Instance.Attack)
+        {
+            characterControl.Attack = true;
+            characterControl.ClickPosition = VirtualInputManager.Instance.ClickPosition;
+        }
+        else
+        {
+            characterControl.Attack = false;
+            characterControl.ClickPosition = Vector3.zero;
+        }
     }
 }

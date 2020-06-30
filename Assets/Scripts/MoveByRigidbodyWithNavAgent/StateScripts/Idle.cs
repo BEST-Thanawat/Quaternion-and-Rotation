@@ -42,13 +42,19 @@ public class Idle : StateData
             animator.SetBool(TransitionParameter.Jump.ToString(), true);
         }
 
-        //if(stateInfo.normalizedTime >= CheckTime)
-        //{
         if (characterControl.PressedC)
         {
             animator.SetBool(TransitionParameter.Crouch.ToString(), true);
         }
-        //}
+
+        if(characterControl.Attack)
+        {
+            animator.SetBool(TransitionParameter.Attack.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.Attack.ToString(), false);
+        }
         
         //if (characterControl.PressedLShift)
         //{
