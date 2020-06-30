@@ -129,7 +129,7 @@ public class WalkForward : StateData
         return false;
     }
 
-    private bool IsBodyPart(Collider collider)
+    public bool IsBodyPart(Collider collider)
     {
         CharacterControl characterControl = collider.transform.root.GetComponent<CharacterControl>();
 
