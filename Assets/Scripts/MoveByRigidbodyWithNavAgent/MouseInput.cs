@@ -54,6 +54,10 @@ public class MouseInput : MonoBehaviour
             float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
             deltaRotation = Quaternion.Euler(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
         }
+        else
+        {
+            deltaRotation = Quaternion.identity;
+        }
 
         //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 30, 0) * Time.deltaTime);
         rb.MoveRotation(rb.rotation * deltaRotation);
