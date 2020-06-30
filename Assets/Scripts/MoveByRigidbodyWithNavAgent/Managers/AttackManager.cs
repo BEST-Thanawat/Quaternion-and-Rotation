@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackManager : MonoBehaviour
+public class AttackManager : Singleton<AttackManager>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    //Current attack
+    public List<AttackInfo> AttackInfos = new List<AttackInfo>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public List<AttackInfo> CurrentAttacks = new List<AttackInfo>();
 }

@@ -97,31 +97,6 @@ public class CharacterControl : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider collider)
-    {
-        //This is ourself bodypart so do nothing.
-        if (RagdollParts.Contains(collider)) return;
-
-        CharacterControl control = collider.transform.root.GetComponent<CharacterControl>();
-        //This is not other character so do nothing. It is something else.
-        if (control == null) return;
-
-        if (collider.gameObject == control.gameObject) return;
-
-        //This is bodypart of other player.
-        if (!CollidingParts.Contains(collider))
-        {
-            CollidingParts.Add(collider);
-        }
-    }
-    private void OnTriggerExit(Collider collider)
-    {
-        if (CollidingParts.Contains(collider))
-        {
-            CollidingParts.Remove(collider);
-        }
-    }
-
     private void SetRagdollParts()
     {
         Collider[] colliders = this.gameObject.GetComponentsInChildren<Collider>();
@@ -131,6 +106,7 @@ public class CharacterControl : MonoBehaviour
             {
                 c.isTrigger = true;
                 RagdollParts.Add(c);
+                c.gameObject.AddComponent<TriggerDetector>();
             }
         }
     }
