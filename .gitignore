@@ -368,3 +368,5 @@ healthchecksdb
 /Assets/PolygonFantasyCharacters/Materials
 /Assets/PolygonFantasyCharacters
 /Assets/Animation
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/Managers/VirtualInputManager.prefab
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/AttackInfo/AttackInfo.prefab
