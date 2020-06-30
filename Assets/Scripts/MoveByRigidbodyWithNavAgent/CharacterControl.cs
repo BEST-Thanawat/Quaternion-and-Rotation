@@ -63,7 +63,7 @@ public class CharacterControl : MonoBehaviour
 
     private void Awake()
     {
-        //SetRagdollParts();
+        SetRagdollParts();
         SetColliderSpheres();
 
         //StartCoroutine(Start());
@@ -72,7 +72,7 @@ public class CharacterControl : MonoBehaviour
     //IEnumerator Start()
     //{
     //    yield return new WaitForSeconds(5f);
-    //    RIGID_BODY.AddForce(200f * Vector3.up);
+    //    RIGID_BODY.AddForce(400f * Vector3.up);
     //    yield return new WaitForSeconds(0.5f);
     //    TurnOnRagdoll();
     //}

@@ -16,4 +16,6 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
     public Vector2 KeyboardPressedValue;
     public Vector2 RotateValue;
     public bool Jump;
+
+    public bool Attack;
 }

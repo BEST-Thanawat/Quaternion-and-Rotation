@@ -113,7 +113,7 @@ public class WalkForward : StateData
         foreach (GameObject o in control.FrontSpheres)
         {
             self = false;
-            Debug.DrawRay(o.transform.position, control.transform.forward * 0.3f, Color.yellow);
+            Debug.DrawRay(o.transform.position, control.transform.forward * BlockDistance, Color.yellow);
             RaycastHit hit;
             if (Physics.Raycast(o.transform.position, control.transform.forward, out hit, BlockDistance))
             {

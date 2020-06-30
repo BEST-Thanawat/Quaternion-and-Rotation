@@ -47,7 +47,7 @@ public class GroundDetector : StateData
         //{
             foreach (GameObject o in control.BottomSpheres)
             {
-                Debug.DrawRay(o.transform.position, Vector3.down * 0.7f, Color.yellow);
+                Debug.DrawRay(o.transform.position, Vector3.down * Distance, Color.yellow);
                 RaycastHit hit;
                 if (Physics.Raycast(o.transform.position, Vector3.down, out hit, Distance))
                 {

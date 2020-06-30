@@ -63,7 +63,7 @@ public class WalkBackward : StateData
     {
         foreach (GameObject o in control.BackSpheres)
         {
-            Debug.DrawRay(o.transform.position, -control.transform.forward * 0.3f, Color.yellow);
+            Debug.DrawRay(o.transform.position, -control.transform.forward * BlockDistance, Color.yellow);
             RaycastHit hit;
             if (Physics.Raycast(o.transform.position, -control.transform.forward, out hit, BlockDistance))
             {

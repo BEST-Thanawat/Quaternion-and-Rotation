@@ -76,7 +76,7 @@ public class StrafeRight : StateData
     {
         foreach (GameObject o in control.RightSpheres)
         {
-            Debug.DrawRay(o.transform.position, control.transform.right * 0.3f, Color.yellow);
+            Debug.DrawRay(o.transform.position, control.transform.right * BlockDistance, Color.yellow);
             RaycastHit hit;
             if (Physics.Raycast(o.transform.position, control.transform.right, out hit, BlockDistance))
             {
