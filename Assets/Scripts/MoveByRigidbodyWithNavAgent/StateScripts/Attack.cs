@@ -14,6 +14,8 @@ public class Attack : StateData
     public float LethalRange;
     public int MaxHits;
     public List<RuntimeAnimatorController> DeathAnimators = new List<RuntimeAnimatorController>();
+
+    private List<AttackInfo> FinishedAttacks = new List<AttackInfo>();
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
         animator.SetBool(TransitionParameter.Attack.ToString(), false);
@@ -83,13 +85,31 @@ public class Attack : StateData
 
     public void ClearAttack()
     {
-        for (int i = 0; i < AttackManager.Instance.CurrentAttacks.Count; i++)
+        FinishedAttacks.Clear();
+
+        foreach (AttackInfo info in AttackManager.Instance.CurrentAttacks)
         {
-            if(AttackManager.Instance.CurrentAttacks[i] == null || AttackManager.Instance.CurrentAttacks[i].isFinished)
+            if(info == null || info.isFinished)
             {
-                AttackManager.Instance.CurrentAttacks.RemoveAt(i);
+                FinishedAttacks.Add(info);
             }
         }
+
+        foreach (AttackInfo info in FinishedAttacks)
+        {
+            if (AttackManager.Instance.CurrentAttacks.Contains(info))
+            {
+                AttackManager.Instance.CurrentAttacks.Remove(info);
+            }
+        }
+
+        //for (int i = 0; i < AttackManager.Instance.CurrentAttacks.Count; i++)
+        //{
+        //    if(AttackManager.Instance.CurrentAttacks[i] == null || AttackManager.Instance.CurrentAttacks[i].isFinished)
+        //    {
+        //        AttackManager.Instance.CurrentAttacks.RemoveAt(i);
+        //    }
+        //}
     }
 
     public RuntimeAnimatorController GetDeathAnimator()
