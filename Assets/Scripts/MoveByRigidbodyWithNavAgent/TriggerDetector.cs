@@ -2,8 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GeneralBodyPart
+{
+    Upper,
+    Lower,
+    Arm,
+    Leg,
+}
 public class TriggerDetector : MonoBehaviour
 {
+    public GeneralBodyPart GeneralBodyPart;
+
+    public List<Collider> CollidingParts = new List<Collider>();
     private CharacterControl owner;
 
     private void Awake()
@@ -22,16 +32,16 @@ public class TriggerDetector : MonoBehaviour
         if (collider.gameObject == attacker.gameObject) return;
 
         //This is bodypart of other player.
-        if (!owner.CollidingParts.Contains(collider))
+        if (!CollidingParts.Contains(collider))
         {
-            owner.CollidingParts.Add(collider);
+            CollidingParts.Add(collider);
         }
     }
     private void OnTriggerExit(Collider attacker)
     {
-        if (owner.CollidingParts.Contains(attacker))
+        if (CollidingParts.Contains(attacker))
         {
-            owner.CollidingParts.Remove(attacker);
+            CollidingParts.Remove(attacker);
         }
     }
 }

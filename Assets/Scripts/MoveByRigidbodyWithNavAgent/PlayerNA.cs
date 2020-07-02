@@ -102,6 +102,11 @@ public class PlayerNA : MonoBehaviour
 
         if (trigClickToMove)
         {
+            //relativePosition = hit.point - rigidbody.position;
+            //targetRotation = Quaternion.LookRotation(relativePosition);
+            //Debug.Log(relativePosition);
+            //Debug.Log(targetRotation);
+            //Debug.Log(rotationTime);
             ClickToMove(hit);
         }
 
@@ -157,19 +162,37 @@ public class PlayerNA : MonoBehaviour
         if (Vector3.Distance(transform.position, raycastHit.point) > 1f && trigClickToMove)
         {
             var targetInput = transform.InverseTransformPoint(raycastHit.point);
-            dirClickToMove = Vector3.Lerp(dirClickToMove, targetInput, Time.deltaTime * speed);
-            rigidbody.MovePosition(Vector3.MoveTowards(transform.position, raycastHit.point, Time.deltaTime * speed)); //Time.deltaTime * dirClickToMove.magnitude
+            dirClickToMove = Vector3.Lerp(dirClickToMove, targetInput, Time.fixedDeltaTime * speed);
+            rigidbody.MovePosition(Vector3.MoveTowards(transform.position, raycastHit.point, Time.fixedDeltaTime * speed)); //Time.deltaTime * dirClickToMove.magnitude
 
             //Rotate to target
             float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
             float turnAmount = Mathf.Atan2(targetInput.x, targetInput.z);
-            Quaternion deltaRotation = Quaternion.Euler(0, turnAmount * turnSpeed * Time.deltaTime, 0);
+            Quaternion deltaRotation = Quaternion.Euler(0, turnAmount * turnSpeed * Time.fixedDeltaTime, 0);
             rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
         }
         else
         {
             trigClickToMove = false;
         }
+    }
+
+    Vector3 relativePosition;
+    Quaternion targetRotation = Quaternion.identity;
+    float rotationTime;
+    private void ClickToMove2(RaycastHit raycastHit)
+    {
+        if (Vector3.Distance(transform.position, raycastHit.point) > 1f && trigClickToMove && rotationTime < 1)
+        {
+            rotationTime += Time.deltaTime * 0.1f;
+            rigidbody.MoveRotation(Quaternion.Lerp(rigidbody.rotation, targetRotation, rotationTime));
+        }
+        else
+        {
+            trigClickToMove = false;
+        }
+
+        if(rotationTime > 1) rotationTime = 0;
     }
 
     //***Click to move using coroutine

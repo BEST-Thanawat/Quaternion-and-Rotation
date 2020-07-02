@@ -6,6 +6,7 @@ using UnityEngine;
 public class DamageDetector : MonoBehaviour
 {
     CharacterControl control;
+    GeneralBodyPart DamagePart;
 
     private void Awake()
     {
@@ -41,29 +42,35 @@ public class DamageDetector : MonoBehaviour
         }
     }
 
+    private bool IsCollided(AttackInfo attackInfo)
+    {
+        foreach (TriggerDetector trigger in control.GetAllTrigger())
+        {
+            foreach (Collider collider in trigger.CollidingParts)
+            {
+                foreach (string name in attackInfo.ColliderNames)
+                {
+                    //AttackInfo matched with target character
+                    if (name == collider.gameObject.name)
+                    {
+                        DamagePart = trigger.GeneralBodyPart;
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
     private void TakeDamage(AttackInfo attackInfo)
     {
         Debug.Log(attackInfo.gameObject.name + " hits: " + this.gameObject.name);
+        Debug.Log(this.gameObject.name + " hit " + DamagePart.ToString());
+
         control.CharacterAnimator.runtimeAnimatorController = attackInfo.AttackAbility.GetDeathAnimator();
         attackInfo.CurrentHits++;
 
         control.GetComponent<CapsuleCollider>().enabled = false;
         control.RIGID_BODY.useGravity = false;
-    }
-
-    private bool IsCollided(AttackInfo attackInfo)
-    {
-        foreach (Collider collider in control.CollidingParts)
-        {
-            foreach (string name in attackInfo.ColliderNames)
-            {
-                //AttackInfo matched with target character
-                if(name == collider.gameObject.name)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

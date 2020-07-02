@@ -16,6 +16,7 @@ public class KeyboardInput : MonoBehaviour
 
         inputMaster = new InputMaster();
         inputMaster.Player.Movement.performed += context => contextKeyboardPressed = context;
+        //inputMaster.Player.Movement.performed += context => contextKeyboardPressed = context;
     }
     private void Update()
     {

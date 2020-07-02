@@ -43,6 +43,7 @@ public class GroundDetector : StateData
             return true;
         }
 
+        //Debug.Log(control.RIGID_BODY.velocity.y);
         //if (control.RIGID_BODY.velocity.y < 0f)
         //{
             foreach (GameObject o in control.BottomSpheres)
