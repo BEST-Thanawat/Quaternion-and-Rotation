@@ -120,7 +120,7 @@ public class WalkForward : StateData
                 {
                     if (!IsBodyPart(hit.collider))
                     {
-                        Debug.Log(true);
+                        //Debug.Log(true);
                         return true;
                     }
                 }

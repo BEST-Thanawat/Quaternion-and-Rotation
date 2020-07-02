@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/Crouch")]
-public class Crouch : StateData
+[CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/CrouchIdle")]
+public class CrouchIdle : StateData
 {
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
@@ -14,7 +14,7 @@ public class Crouch : StateData
     {
         CharacterControl characterControl = characterState.GetCharacterControl(animator);
 
-        if (characterControl.PressedW)
+        if (characterControl.PressedW || !characterControl.IsArrived)
         {
             animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
         }

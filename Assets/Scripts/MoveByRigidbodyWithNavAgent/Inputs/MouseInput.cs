@@ -42,7 +42,7 @@ public class MouseInput : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(rotateValue);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
             {
                 //Debug.Log(hit.point);
                 //VirtualInputManager.Instance.Attack = true;

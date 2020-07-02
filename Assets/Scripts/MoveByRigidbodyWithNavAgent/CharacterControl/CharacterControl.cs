@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Processors;
@@ -54,30 +55,34 @@ public class CharacterControl : MonoBehaviour
     [Header("Attack")]
     public bool Attack;
 
-    [Header("Rotate Character")]
-    public float MovingTurnSpeed = 360;
-    public float StationaryTurnSpeed = 180;
-    public float ForwardAmount = 1f;
-    public Vector2 MousePosition;
-    public bool MouseClicked;
+    [Header("Face To Mouse")]
+    //public float MovingTurnSpeed = 360;
+    //public float StationaryTurnSpeed = 180;
+    //public float ForwardAmount = 1f;
+    public Vector2 MousePosition; //For face to mouse function
+    public float RotateSpeedFaceToMouse = 5f;
 
     [Header("Click to Move")]
+    public bool MouseClicked;
     public Vector3 ClickPosition; //Is hit.point
     public float StoppingDistance = 0.1f;
-    private bool MustMove = true;
-    public float turnAmount;
-    public bool IsArrived = false;
+    [SerializeField] private float remainingDistance = 0;
+    public float RotateSpeed = 0.5f;
+    //private bool MustMove = true;
+    //public float turnAmount;
+    public bool IsArrived = true;
 
     private Quaternion deltaRotation;
     private Vector3 dirClickToMove;
     private float speed = 4.5f;
     private bool isMoving = false;
 
-    bool trigClickToMove = true;
+    bool trigggerClickToMove = false;
     Vector3 relativePosition;
     Quaternion targetRotation = Quaternion.identity;
     float rotationTime;
 
+    float rotationTimeFaceToMouse = 0;
     private Rigidbody rigid;
     private List<TriggerDetector> TriggerDetectors = new List<TriggerDetector>();
     public Rigidbody RIGID_BODY
@@ -228,6 +233,7 @@ public class CharacterControl : MonoBehaviour
 
         //TestCo1();
         //ClickToMove(ClickPosition);
+        ClickToMoveUpdate();
     }
     private void FixedUpdate()
     {
@@ -241,55 +247,12 @@ public class CharacterControl : MonoBehaviour
             RIGID_BODY.velocity += (Vector3.down * PullMultiplier);
         }
 
+        ClickToMoveFixedUpdate();
+
         if (!isMoving)
         {
-            if (this.transform.GetComponent<ManualInput>().enabled)
-            {
-                //*** Rotate character by mouse position.
-                Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100f))
-                {
-                    Vector3 move = this.transform.InverseTransformPoint(hit.point);
-                    float m_TurnAmount = Mathf.Atan2(move.x, move.z);
-                    ForwardAmount = move.z;
-                    float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
-                    deltaRotation = Quaternion.Euler(0, m_TurnAmount * turnSpeed * Time.fixedDeltaTime, 0);
-                }
-                else
-                {
-                    deltaRotation = Quaternion.identity;
-                }
-
-                //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 30, 0) * Time.deltaTime);
-                RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
-            }
+            FaceToMouse();
         }
-
-        if (MouseClicked)
-        {
-            relativePosition = ClickPosition - RIGID_BODY.position;
-            targetRotation = Quaternion.LookRotation(relativePosition);
-            //Debug.Log(relativePosition);
-            //Debug.Log(targetRotation);
-            trigClickToMove = true;
-            rotationTime = 0;
-        }
-
-        if (trigClickToMove)
-        {
-            isMoving = true;
-            ClickToMove2();
-            
-            if (rotationTime > 1)
-            {
-                Debug.Log("Reset");
-                trigClickToMove = false;
-                isMoving = false;
-            }
-        }
-
-        ClickToMove3();
 
         //if (MouseClicked && MustMove)
         //{
@@ -306,25 +269,83 @@ public class CharacterControl : MonoBehaviour
         //}
     }
     
-    private void ClickToMove2()
+    private void ClickToMoveUpdate()
     {
-        isMoving = true;
-        rotationTime += Time.deltaTime * 0.5f;
-        RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
-    }
-    private void ClickToMove3()
-    {
-        if (Vector3.Distance(RIGID_BODY.position, ClickPosition) > StoppingDistance)
+        if (MouseClicked)
         {
-            Debug.Log(Vector3.Distance(RIGID_BODY.position, ClickPosition));
-            IsArrived = false;
-        }
-        else
-        {
-            Debug.Log("Arrived");
-            IsArrived = true;
+            relativePosition = ClickPosition - RIGID_BODY.position;
+            targetRotation = Quaternion.LookRotation(relativePosition);
+            //Debug.Log(relativePosition);
+            //Debug.Log(targetRotation);
+            trigggerClickToMove = true;
+            rotationTime = 0;
         }
     }
+    private void ClickToMoveFixedUpdate()
+    {
+        if (trigggerClickToMove)
+        {
+            isMoving = true;
+            rotationTime += Time.deltaTime * RotateSpeed;
+            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+            remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+            if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+            {
+                trigggerClickToMove = false;
+                isMoving = false;
+                IsArrived = true;
+                return;
+            }
+            else
+            {
+                IsArrived = false;
+            }
+        }
+    }
+    
+    private void FaceToMouse()
+    {
+        if (this.transform.GetComponent<ManualInput>().enabled)
+        {
+            //*** Rotate character by mouse position.
+            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+            RaycastHit hit;
+            Vector3 relativeDirection = Vector3.zero;
+
+            if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
+            {
+                relativeDirection = hit.point - RIGID_BODY.position;
+                rotationTimeFaceToMouse = 0;
+            }
+
+            rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
+            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
+        }
+
+        //if (this.transform.GetComponent<ManualInput>().enabled)
+        //{
+        //    //*** Rotate character by mouse position.
+        //    Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(ray, out hit, 100f))
+        //    {
+        //        Vector3 move = this.transform.InverseTransformPoint(hit.point);
+        //        float m_TurnAmount = Mathf.Atan2(move.x, move.z);
+        //        ForwardAmount = move.z;
+        //        float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
+        //        deltaRotation = Quaternion.Euler(0, m_TurnAmount * turnSpeed * Time.fixedDeltaTime, 0);
+        //    }
+        //    else
+        //    {
+        //        deltaRotation = Quaternion.identity;
+        //    }
+
+        //    //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 30, 0) * Time.deltaTime);
+        //    RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
+        //}
+    }
+
     public void CreateMiddleSpheres(GameObject start, Vector3 direction, float sec, int interations, List<GameObject> spheresLlst)
     {
         for (int i = 0; i < interations; i++)

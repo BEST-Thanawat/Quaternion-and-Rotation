@@ -91,9 +91,9 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PoolObjects\PoolObject.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\PoolObjects\PoolObjectLoader.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Attack.cs" />
-    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Crouch.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchBackward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchForward.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\CrouchIdle.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\ForceTransition.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\GroundDetector.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Idle.cs" />
