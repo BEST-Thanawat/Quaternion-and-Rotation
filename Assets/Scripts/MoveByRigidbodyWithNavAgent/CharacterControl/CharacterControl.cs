@@ -66,6 +66,7 @@ public class CharacterControl : MonoBehaviour
     public float StoppingDistance = 0.1f;
     private bool MustMove = true;
     public float turnAmount;
+    public bool IsArrived = false;
 
     private Quaternion deltaRotation;
     private Vector3 dirClickToMove;
@@ -220,7 +221,7 @@ public class CharacterControl : MonoBehaviour
     
     private void Update()
     {
-        if(trigClickToMove) VirtualInputManager.Instance.PressedW = true;
+        //if(trigClickToMove) VirtualInputManager.Instance.PressedW = true;
         //float f = Mathf.Lerp(0f, 100f, Timettt);
         //Timettt += 0.1f * Time.deltaTime;
         //Debug.Log(f);
@@ -279,6 +280,7 @@ public class CharacterControl : MonoBehaviour
         {
             isMoving = true;
             ClickToMove2();
+            
             if (rotationTime > 1)
             {
                 Debug.Log("Reset");
@@ -286,6 +288,8 @@ public class CharacterControl : MonoBehaviour
                 isMoving = false;
             }
         }
+
+        ClickToMove3();
 
         //if (MouseClicked && MustMove)
         //{
@@ -308,7 +312,19 @@ public class CharacterControl : MonoBehaviour
         rotationTime += Time.deltaTime * 0.5f;
         RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
     }
-
+    private void ClickToMove3()
+    {
+        if (Vector3.Distance(RIGID_BODY.position, ClickPosition) > StoppingDistance)
+        {
+            Debug.Log(Vector3.Distance(RIGID_BODY.position, ClickPosition));
+            IsArrived = false;
+        }
+        else
+        {
+            Debug.Log("Arrived");
+            IsArrived = true;
+        }
+    }
     public void CreateMiddleSpheres(GameObject start, Vector3 direction, float sec, int interations, List<GameObject> spheresLlst)
     {
         for (int i = 0; i < interations; i++)

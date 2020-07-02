@@ -20,13 +20,13 @@ public class WalkForward : StateData
     {
         CharacterControl characterControl = characterState.GetCharacterControl(animator);
 
-        if (!characterControl.PressedW)
+        if (!characterControl.PressedW && characterControl.IsArrived)
         {
             animator.SetBool(TransitionParameter.WalkForward.ToString(), false);
             return;
         }
 
-        if (characterControl.PressedW)
+        if (characterControl.PressedW || !characterControl.IsArrived)
         {
             if (CheckFront(characterControl))
             {

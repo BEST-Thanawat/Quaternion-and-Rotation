@@ -21,7 +21,7 @@ public class Idle : StateData
     {
         CharacterControl characterControl = characterState.GetCharacterControl(animator);
 
-        if (characterControl.PressedW)
+        if (characterControl.PressedW || !characterControl.IsArrived)
         {
             animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
         }
