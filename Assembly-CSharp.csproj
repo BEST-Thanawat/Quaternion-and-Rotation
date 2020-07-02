@@ -66,7 +66,6 @@
     <Compile Include="Assets\Akishaqs\Characters\Liam v1\Demo\DemoStuff\Rotate.cs" />
     <Compile Include="Assets\Akishaqs\Characters\Liam v2\Demo v2\DemoStuff\Customizable.cs" />
     <Compile Include="Assets\Akishaqs\Characters\Liam v2\Demo v2\DemoStuff\DragToRotate.cs" />
-    <Compile Include="Assets\InputMaster.cs" />
     <Compile Include="Assets\Scripts\FieldOfView\EnemyFieldOfView.cs" />
     <Compile Include="Assets\Scripts\FieldOfView\FieldOfView.cs" />
     <Compile Include="Assets\Scripts\FieldOfView\FieldOfViewEditor.cs" />
@@ -79,6 +78,7 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterManager.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\DamageDetector.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\EnemyNA.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\InputMaster\InputMaster.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Inputs\KeyboardInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Inputs\ManualInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Inputs\MouseInput.cs" />
@@ -100,7 +100,6 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Jump.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Landing.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Locomotion.cs" />
-    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Locomotion2.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Run.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeLeft.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeRight.cs" />

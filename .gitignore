@@ -372,3 +372,4 @@ healthchecksdb
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/AttackInfo/AttackInfo.prefab
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/Death/FallingBackDeath.controller
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/PoolObjects/AttackInfo/Resources/AttackInfo.prefab
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/InputMaster/InputMaster.inputactions

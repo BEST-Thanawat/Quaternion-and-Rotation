@@ -56,11 +56,11 @@ public class CharacterControl : MonoBehaviour
     public bool Attack;
 
     [Header("Face To Mouse")]
+    public Vector2 MousePosition; //For face to mouse function
+    public float RotateSpeedFaceToMouse = 5f;
     //public float MovingTurnSpeed = 360;
     //public float StationaryTurnSpeed = 180;
     //public float ForwardAmount = 1f;
-    public Vector2 MousePosition; //For face to mouse function
-    public float RotateSpeedFaceToMouse = 5f;
 
     [Header("Click to Move")]
     public bool MouseClicked;
@@ -68,21 +68,21 @@ public class CharacterControl : MonoBehaviour
     public float StoppingDistance = 0.1f;
     [SerializeField] private float remainingDistance = 0;
     public float RotateSpeed = 2f;
+    public bool IsArrived = true;
     //private bool MustMove = true;
     //public float turnAmount;
-    public bool IsArrived = true;
 
-    private Quaternion deltaRotation;
-    private Vector3 dirClickToMove;
-    private float speed = 4.5f;
+    //private Quaternion deltaRotation;
+    //private Vector3 dirClickToMove;
+    //private float speed = 4.5f;
     private bool isMoving = false;
 
-    bool trigggerClickToMove = false;
-    Vector3 relativePosition;
-    Quaternion targetRotation = Quaternion.identity;
-    float rotationTime;
+    private bool trigggerClickToMove = false;
+    private Vector3 relativePosition;
+    private Quaternion targetRotation = Quaternion.identity;
+    private float rotationTime;
 
-    float rotationTimeFaceToMouse = 0;
+    private float rotationTimeFaceToMouse = 0;
     private Rigidbody rigid;
     private List<TriggerDetector> TriggerDetectors = new List<TriggerDetector>();
     public Rigidbody RIGID_BODY
@@ -104,7 +104,7 @@ public class CharacterControl : MonoBehaviour
 
         //StartCoroutine(Start());
 
-        deltaRotation = Quaternion.identity;
+        //deltaRotation = Quaternion.identity;
     }
 
     //IEnumerator Start()
@@ -274,6 +274,7 @@ public class CharacterControl : MonoBehaviour
         if (MouseClicked)
         {
             relativePosition = ClickPosition - RIGID_BODY.position;
+            relativePosition.y = 0f;
             targetRotation = Quaternion.LookRotation(relativePosition);
             //Debug.Log(relativePosition);
             //Debug.Log(targetRotation);
@@ -293,9 +294,9 @@ public class CharacterControl : MonoBehaviour
             if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
             {
                 trigggerClickToMove = false;
-                isMoving = false;
                 IsArrived = true;
-                return;
+
+                StartCoroutine(SetIsMovindToFalse(0.4f));
             }
             else
             {
@@ -316,11 +317,15 @@ public class CharacterControl : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
             {
                 relativeDirection = hit.point - RIGID_BODY.position;
+                relativeDirection.y = 0;
                 rotationTimeFaceToMouse = 0;
             }
 
             rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
-            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
+            if (relativeDirection != Vector3.zero)
+            {
+                RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
+            }
         }
 
         //if (this.transform.GetComponent<ManualInput>().enabled)
@@ -362,6 +367,11 @@ public class CharacterControl : MonoBehaviour
         return obj;
     }
 
+    IEnumerator SetIsMovindToFalse(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        isMoving = false;
+    }
     //private void ClickToMove(Vector3 position)
     //{
     //    //Debug.Log(Vector3.Distance(transform.position, raycastHit.point));

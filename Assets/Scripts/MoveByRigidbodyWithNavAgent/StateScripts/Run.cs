@@ -23,7 +23,7 @@ public class Run : StateData
 
         if (characterControl.PressedLShift)
         {
-            if (characterControl.IsArrived)
+            if (characterControl.IsArrived && !characterControl.PressedW)
             {
                 animator.SetBool(TransitionParameter.Run.ToString(), false);
             }

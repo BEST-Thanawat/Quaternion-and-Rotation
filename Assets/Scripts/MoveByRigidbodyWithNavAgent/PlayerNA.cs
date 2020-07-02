@@ -102,13 +102,19 @@ public class PlayerNA : MonoBehaviour
 
         if (trigClickToMove)
         {
-            //relativePosition = hit.point - rigidbody.position;
-            //targetRotation = Quaternion.LookRotation(relativePosition);
-            //Debug.Log(relativePosition);
-            //Debug.Log(targetRotation);
-            //Debug.Log(rotationTime);
             ClickToMove(hit);
         }
+
+        //if (trigClickToMove)
+        //{
+        //    relativePosition = hit.point - rigidbody.position;
+        //    relativePosition.y = 0f;
+        //    targetRotation = Quaternion.LookRotation(relativePosition);
+        //    //Debug.Log(relativePosition);
+        //    //Debug.Log(targetRotation);
+        //    //Debug.Log(rotationTime);
+        //    ClickToMove2(hit);
+        //}
 
         if (!isJumping)
         {
@@ -184,6 +190,10 @@ public class PlayerNA : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, raycastHit.point) > 1f && trigClickToMove && rotationTime < 1)
         {
+            var targetInput = transform.InverseTransformPoint(raycastHit.point);
+            dirClickToMove = Vector3.Lerp(dirClickToMove, targetInput, Time.fixedDeltaTime * speed);
+            rigidbody.MovePosition(Vector3.MoveTowards(transform.position, raycastHit.point, Time.fixedDeltaTime * speed));
+
             rotationTime += Time.deltaTime * 0.1f;
             rigidbody.MoveRotation(Quaternion.Lerp(rigidbody.rotation, targetRotation, rotationTime));
         }

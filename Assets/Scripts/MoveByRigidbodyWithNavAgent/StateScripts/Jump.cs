@@ -25,6 +25,10 @@ public class Jump : StateData
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
+        CharacterControl characterControl = characterState.GetCharacterControl(animator);
+
         animator.SetBool(TransitionParameter.Jump.ToString(), false);
+        characterControl.GravityMultiplier = 0;
+        characterControl.PullMultiplier = 0;
     }
 }
