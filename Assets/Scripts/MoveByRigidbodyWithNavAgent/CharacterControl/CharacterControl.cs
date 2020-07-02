@@ -67,7 +67,7 @@ public class CharacterControl : MonoBehaviour
     public Vector3 ClickPosition; //Is hit.point
     public float StoppingDistance = 0.1f;
     [SerializeField] private float remainingDistance = 0;
-    public float RotateSpeed = 0.5f;
+    public float RotateSpeed = 2f;
     //private bool MustMove = true;
     //public float turnAmount;
     public bool IsArrived = true;

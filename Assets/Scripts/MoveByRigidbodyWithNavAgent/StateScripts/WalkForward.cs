@@ -26,6 +26,11 @@ public class WalkForward : StateData
             return;
         }
 
+        if (characterControl.IsArrived)
+        {
+            animator.SetBool(TransitionParameter.WalkForward.ToString(), false);
+        }
+
         if (characterControl.PressedW || !characterControl.IsArrived)
         {
             if (Utility.Instance.CheckFront(characterControl, BlockDistance))

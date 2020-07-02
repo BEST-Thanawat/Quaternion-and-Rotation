@@ -21,9 +21,14 @@ public class Run : StateData
             return;
         }
 
-        if (characterControl.PressedLShift)
+        if (characterControl.IsArrived)
         {
-            if (CheckFront(characterControl))
+            animator.SetBool(TransitionParameter.Run.ToString(), false);
+        }
+
+        if (characterControl.PressedLShift && !characterControl.IsArrived)
+        {
+            if (Utility.Instance.CheckFront(characterControl, BlockDistance))
             {
                 animator.SetBool(TransitionParameter.Run.ToString(), true);
             }
@@ -38,18 +43,5 @@ public class Run : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
-    }
-    bool CheckFront(CharacterControl control)
-    {
-        foreach (GameObject o in control.FrontSpheres)
-        {
-            Debug.DrawRay(o.transform.position, control.transform.forward * 0.3f, Color.yellow);
-            RaycastHit hit;
-            if (Physics.Raycast(o.transform.position, control.transform.forward, out hit, BlockDistance))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }
