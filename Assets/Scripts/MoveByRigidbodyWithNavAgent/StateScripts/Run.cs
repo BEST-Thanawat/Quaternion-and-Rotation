@@ -21,17 +21,21 @@ public class Run : StateData
             return;
         }
 
-        if (characterControl.IsArrived)
+        if (characterControl.PressedLShift)
         {
-            animator.SetBool(TransitionParameter.Run.ToString(), false);
-        }
+            if (characterControl.IsArrived)
+            {
+                animator.SetBool(TransitionParameter.Run.ToString(), false);
+            }
 
-        if (characterControl.PressedLShift && !characterControl.IsArrived)
-        {
             if (Utility.Instance.CheckFront(characterControl, BlockDistance))
             {
-                animator.SetBool(TransitionParameter.Run.ToString(), true);
+                animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
             }
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.WalkForward.ToString(), false);
         }
 
         if (characterControl.Jump)

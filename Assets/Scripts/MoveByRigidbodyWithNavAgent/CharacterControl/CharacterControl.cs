@@ -306,7 +306,7 @@ public class CharacterControl : MonoBehaviour
     
     private void FaceToMouse()
     {
-        if (this.transform.GetComponent<ManualInput>().enabled)
+        if (transform.GetComponent<ManualInput>().enabled)
         {
             //*** Rotate character by mouse position.
             Ray ray = Camera.main.ScreenPointToRay(MousePosition);
