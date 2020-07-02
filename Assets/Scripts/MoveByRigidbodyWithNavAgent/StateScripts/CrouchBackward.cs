@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/CrouchBackward")]
 public class CrouchBackward : StateData
 {
+    public float BlockDistance;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -32,7 +33,10 @@ public class CrouchBackward : StateData
 
         if (characterControl.PressedS)
         {
-            animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+            if (Utility.Instance.CheckBack(characterControl, BlockDistance))
+            {
+                animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
+            }
         }
 
         if (characterControl.PressedD)

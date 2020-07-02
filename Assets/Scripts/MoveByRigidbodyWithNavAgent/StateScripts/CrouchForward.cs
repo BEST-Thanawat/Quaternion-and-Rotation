@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New State", menuName = "MyGame/AbilityData/CrouchForward")]
 public class CrouchForward : StateData
 {
+    public float BlockDistance;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -22,7 +23,10 @@ public class CrouchForward : StateData
 
         if (characterControl.PressedW || !characterControl.IsArrived)
         {
-            animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
+            if (Utility.Instance.CheckFront(characterControl, BlockDistance))
+            {
+                animator.SetBool(TransitionParameter.WalkForward.ToString(), true);
+            }
         }
 
         if (characterControl.PressedA)

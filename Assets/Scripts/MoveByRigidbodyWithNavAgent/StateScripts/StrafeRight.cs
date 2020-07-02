@@ -51,7 +51,7 @@ public class StrafeRight : StateData
 
         if (characterControl.PressedD)
         {
-            if (CheckRight(characterControl))
+            if (Utility.Instance.CheckRight(characterControl, BlockDistance))
             {
                 animator.SetBool(TransitionParameter.StrafeRight.ToString(), true);
             }
@@ -70,39 +70,5 @@ public class StrafeRight : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
-    }
-
-    bool CheckRight(CharacterControl control)
-    {
-        foreach (GameObject o in control.RightSpheres)
-        {
-            Debug.DrawRay(o.transform.position, control.transform.right * BlockDistance, Color.yellow);
-            RaycastHit hit;
-            if (Physics.Raycast(o.transform.position, control.transform.right, out hit, BlockDistance))
-            {
-                if (!control.RagdollParts.Contains(hit.collider))
-                {
-                    if (!IsBodyPart(hit.collider))
-                    {
-                        Debug.Log(true);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    public bool IsBodyPart(Collider collider)
-    {
-        CharacterControl characterControl = collider.transform.root.GetComponent<CharacterControl>();
-
-        if (characterControl == null) return false;
-        if (characterControl.gameObject == collider.gameObject) return false;
-        if (characterControl.RagdollParts.Contains(collider))
-        {
-            return true;
-        }
-
-        return false;
     }
 }

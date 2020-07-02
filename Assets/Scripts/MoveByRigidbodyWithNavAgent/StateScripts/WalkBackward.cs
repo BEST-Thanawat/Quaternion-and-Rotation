@@ -38,7 +38,7 @@ public class WalkBackward : StateData
 
         if (characterControl.PressedS)
         {
-            if (CheckBack(characterControl))
+            if (Utility.Instance.CheckBack(characterControl, BlockDistance))
             {
                 animator.SetBool(TransitionParameter.WalkBackward.ToString(), true);
             }
@@ -58,38 +58,5 @@ public class WalkBackward : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
-    }
-    bool CheckBack(CharacterControl control)
-    {
-        foreach (GameObject o in control.BackSpheres)
-        {
-            Debug.DrawRay(o.transform.position, -control.transform.forward * BlockDistance, Color.yellow);
-            RaycastHit hit;
-            if (Physics.Raycast(o.transform.position, -control.transform.forward, out hit, BlockDistance))
-            {
-                if (!control.RagdollParts.Contains(hit.collider))
-                {
-                    if (!IsBodyPart(hit.collider))
-                    {
-                        Debug.Log(true);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    private bool IsBodyPart(Collider collider)
-    {
-        CharacterControl characterControl = collider.transform.root.GetComponent<CharacterControl>();
-
-        if (characterControl == null) return false;
-        if (characterControl.gameObject == collider.gameObject) return false;
-        if (characterControl.RagdollParts.Contains(collider))
-        {
-            return true;
-        }
-
-        return false;
     }
 }

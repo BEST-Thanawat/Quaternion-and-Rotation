@@ -105,6 +105,7 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeLeft.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\StrafeRight.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Toggle.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\Utility.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkBackward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\StateScripts\WalkForward.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\TriggerDetector.cs" />
