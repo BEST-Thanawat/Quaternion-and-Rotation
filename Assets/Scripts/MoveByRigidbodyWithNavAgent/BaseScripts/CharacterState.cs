@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Animations;
+using UnityEngine.PlayerLoop;
 
 public class CharacterState : StateMachineBehaviour
 {
@@ -20,6 +21,14 @@ public class CharacterState : StateMachineBehaviour
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         UpdateAll(this, animator, stateInfo);
+    }
+    public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        foreach (StateData d in ListAbilityData)
+        {
+            d.OnMove(this, animator, stateInfo);
+        }
+        //base.OnStateMove(animator, stateInfo, layerIndex);
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

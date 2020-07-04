@@ -73,6 +73,8 @@
     <Compile Include="Assets\Scripts\MoveByRigidBody\Enemy.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidBody\Player.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\BaseScripts\CharacterState.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\BaseScripts\KinematicMovement.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\BaseScripts\MovingSphere.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\BaseScripts\StateData.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterControl\CharacterControl.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterManager.cs" />

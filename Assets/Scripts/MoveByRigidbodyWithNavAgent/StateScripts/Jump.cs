@@ -22,6 +22,10 @@ public class Jump : StateData
         characterControl.GravityMultiplier = Gravity.Evaluate(stateInfo.normalizedTime);
         characterControl.PullMultiplier = Pull.Evaluate(stateInfo.normalizedTime);
     }
+    public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+
+    }
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {

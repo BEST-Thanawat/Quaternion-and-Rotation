@@ -55,7 +55,7 @@ public class Idle : StateData
         {
             animator.SetBool(TransitionParameter.Attack.ToString(), false);
         }
-        
+
         //if (characterControl.PressedLShift)
         //{
         //    targetInput.x *= 1f;
@@ -84,6 +84,10 @@ public class Idle : StateData
         //{
         //    animator.SetBool(TransitionParameter.Move.ToString(), true);
         //}
+    }
+    public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+
     }
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)

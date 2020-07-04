@@ -77,7 +77,7 @@ public class Utility : Singleton<Utility>
                 {
                     if (!IsBodyPart(hit.collider))
                     {
-                        Debug.Log(true);
+                        //Debug.Log(true);
                         return true;
                     }
                 }

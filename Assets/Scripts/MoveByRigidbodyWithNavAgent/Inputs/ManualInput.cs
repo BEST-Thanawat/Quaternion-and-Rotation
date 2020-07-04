@@ -14,6 +14,7 @@ public class ManualInput : MonoBehaviour
     {
         characterControl.KeyboardPressedValue = VirtualInputManager.Instance.KeyboardPressedValue;
         characterControl.MousePosition = VirtualInputManager.Instance.MousePosition;
+        characterControl.Velocity = VirtualInputManager.Instance.Velocity;
 
         //if (VirtualInputManager.Instance.MustMove)
         //{

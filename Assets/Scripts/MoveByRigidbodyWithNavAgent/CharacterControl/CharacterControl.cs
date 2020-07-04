@@ -69,6 +69,9 @@ public class CharacterControl : MonoBehaviour
     [SerializeField] private float remainingDistance = 0;
     public float RotateSpeed = 2f;
     public bool IsArrived = true;
+
+    [Header("Kinematic Movement")]
+    public Vector3 Velocity;
     //private bool MustMove = true;
     //public float turnAmount;
 
@@ -372,6 +375,20 @@ public class CharacterControl : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         isMoving = false;
     }
+
+    //private void OnAnimatorMove()
+    //{
+    //    // we implement this function to override the default root motion.
+    //        // this allows us to modify the positional speed before it's applied.
+    //        if (m_IsGrounded && Time.deltaTime > 0)
+    //        {
+    //            Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
+
+    //            // we preserve the existing y part of the current velocity.
+    //            v.y = m_Rigidbody.velocity.y;
+    //            m_Rigidbody.velocity = v;
+    //        }
+    //}
     //private void ClickToMove(Vector3 position)
     //{
     //    //Debug.Log(Vector3.Distance(transform.position, raycastHit.point));

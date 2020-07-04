@@ -168,7 +168,7 @@ public class PlayerNA : MonoBehaviour
         if (Vector3.Distance(transform.position, raycastHit.point) > 1f && trigClickToMove)
         {
             var targetInput = transform.InverseTransformPoint(raycastHit.point);
-            dirClickToMove = Vector3.Lerp(dirClickToMove, targetInput, Time.fixedDeltaTime * speed);
+            //dirClickToMove = Vector3.Lerp(dirClickToMove, targetInput, Time.fixedDeltaTime * speed);
             rigidbody.MovePosition(Vector3.MoveTowards(transform.position, raycastHit.point, Time.fixedDeltaTime * speed)); //Time.deltaTime * dirClickToMove.magnitude
 
             //Rotate to target

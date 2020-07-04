@@ -30,6 +30,10 @@ public class GroundDetector : StateData
             }
         }
     }
+    public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+
+    }
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
@@ -38,13 +42,18 @@ public class GroundDetector : StateData
 
     bool IsGrounded(CharacterControl control)
     {
-        if(control.RIGID_BODY.velocity.y >= -0.001f && control.RIGID_BODY.velocity.y <= 0f)
+        //Debug.Log(Mathf.Approximately(control.RIGID_BODY.velocity.y, 0));
+        if (Mathf.Approximately(control.RIGID_BODY.velocity.y, 0.0f))
         {
             return true;
         }
+        //if(control.RIGID_BODY.velocity.y >= -0.000001f && control.RIGID_BODY.velocity.y <= 0.0f)
+        //{
+        //    return true;
+        //}
 
         //Debug.Log(control.RIGID_BODY.velocity.y);
-        //if (control.RIGID_BODY.velocity.y < 0f)
+        //if (control.RIGID_BODY.velocity.y < 0.000001f)
         //{
             foreach (GameObject o in control.BottomSpheres)
             {
