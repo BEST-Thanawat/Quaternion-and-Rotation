@@ -30,10 +30,10 @@ public class GroundDetector : StateData
             }
         }
     }
-    public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
-    {
+    //public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    //{
 
-    }
+    //}
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
