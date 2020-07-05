@@ -2,7 +2,6 @@
 
 public class MovingSphere : MonoBehaviour
 {
-
 	[SerializeField, Range(0f, 100f)]
 	float maxSpeed = 10f;
 

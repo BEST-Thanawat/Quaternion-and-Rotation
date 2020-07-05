@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class KinematicMovement : MonoBehaviour
 {
-	public Vector3 velocity;
-
+	public Vector3 Velocity;
 	[SerializeField, Range(0f, 100f)]
 	float maxSpeed = 10f;
 
@@ -30,16 +28,24 @@ public class KinematicMovement : MonoBehaviour
 	LayerMask probeMask = -1, stairsMask = -1;
 
 	Rigidbody body;
-	private Vector3 desiredVelocity;
+
+	Vector3 velocity, desiredVelocity;
+
 	bool desiredJump;
+
 	Vector3 contactNormal, steepNormal;
+
 	int groundContactCount, steepContactCount;
-	int jumpPhase;
-	float minGroundDotProduct, minStairsDotProduct;
-	int stepsSinceLastGrounded, stepsSinceLastJump;
 
 	bool OnGround => groundContactCount > 0;
+
 	bool OnSteep => steepContactCount > 0;
+
+	int jumpPhase;
+
+	float minGroundDotProduct, minStairsDotProduct;
+
+	int stepsSinceLastGrounded, stepsSinceLastJump;
 
 	void OnValidate()
 	{
@@ -59,6 +65,7 @@ public class KinematicMovement : MonoBehaviour
 		//playerInput.x = Input.GetAxis("Horizontal");
 		//playerInput.y = Input.GetAxis("Vertical");
 		//playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+		Debug.Log("Ground : " + OnGround);
 		desiredVelocity = new Vector3(VirtualInputManager.Instance.KeyboardPressedValue.x, 0f, VirtualInputManager.Instance.KeyboardPressedValue.y) * maxSpeed;
 
 		desiredJump |= VirtualInputManager.Instance.Jump;
@@ -75,8 +82,8 @@ public class KinematicMovement : MonoBehaviour
 			Jump();
 		}
 
-		//body.velocity = velocity;
-		VirtualInputManager.Instance.Velocity = velocity;
+		Debug.Log(velocity);
+		body.velocity = velocity;
 		ClearState();
 	}
 
@@ -162,49 +169,20 @@ public class KinematicMovement : MonoBehaviour
 	{
 		Vector3 xAxis = ProjectOnContactPlane(Vector3.right).normalized;
 		Vector3 zAxis = ProjectOnContactPlane(Vector3.forward).normalized;
-		
+
 		float currentX = Vector3.Dot(velocity, xAxis);
 		float currentZ = Vector3.Dot(velocity, zAxis);
 
 		float acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
 		float maxSpeedChange = acceleration * Time.deltaTime;
 
-		float newX = Mathf.MoveTowards(currentX, desiredVelocity.x, maxSpeedChange);
-		float newZ = Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
-		//Debug.Log("x: " + currentX);
-		//Debug.Log("z: " + currentZ);
-		//Debug.Log("x: " + xAxis * (newX - currentX));
-		//Debug.Log("z: " + zAxis * (newZ - currentZ));
+		float newX =
+			Mathf.MoveTowards(currentX, desiredVelocity.x, maxSpeedChange);
+		float newZ =
+			Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
+
 		velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
-
-
-
-		//if (transform.GetComponent<ManualInput>().enabled)
-		//{
-		//	//*** Rotate character by mouse position.
-		//	Ray ray = Camera.main.ScreenPointToRay(VirtualInputManager.Instance.MousePosition);
-		//	RaycastHit hit;
-		//	Vector3 relativeDirection = Vector3.zero;
-
-
-		//	if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
-		//	{
-		//		Vector3 old = body.transform.position;
-		//		Vector3 newP = new Vector3(hit.point.x, 0, hit.point.z);
-
-		//		Vector3 velocityN = (newP - old);
-		//		Vector3 direction = velocity.normalized;
-		//		velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ) + velocityN.normalized * 1f;
-		//	}
-		//}
-
-
-
-		//Vector3 v = (GetComponent<Animator>().deltaPosition * 1) / Time.deltaTime;
-		//v.y = body.velocity.y;
-		//velocity += new Vector3(0, 0, 1).normalized * (newZ - currentZ);
 	}
-
 
 	void Jump()
 	{

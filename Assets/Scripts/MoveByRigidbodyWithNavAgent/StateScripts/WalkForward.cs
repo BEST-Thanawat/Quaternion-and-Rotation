@@ -68,23 +68,23 @@ public class WalkForward : StateData
         }
     }
 
-    public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
-    {
-        CharacterControl characterControl = characterState.GetCharacterControl(animator);
-        characterControl.RIGID_BODY.velocity = characterControl.Velocity;
-        //characterControl.RIGID_BODY.MovePosition(characterControl.RIGID_BODY.position + characterControl.Velocity * Time.fixedDeltaTime);
+    //public override void OnMove(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    //{
+    //    //CharacterControl characterControl = characterState.GetCharacterControl(animator);
+    //    ////characterControl.RIGID_BODY.velocity = characterControl.Velocity;
+    //    //characterControl.RIGID_BODY.MovePosition(characterControl.RIGID_BODY.position + characterControl.Velocity * Time.fixedDeltaTime);
 
-        //CharacterControl characterControl = characterState.GetCharacterControl(animator);
-        //if (animator.GetBool(TransitionParameter.Grounded.ToString()) && Time.fixedDeltaTime > 0)
-        //{
-        //    Vector3 v = (animator.deltaPosition * 1) / Time.fixedDeltaTime;
+    //    //CharacterControl characterControl = characterState.GetCharacterControl(animator);
+    //    //if (animator.GetBool(TransitionParameter.Grounded.ToString()) && Time.fixedDeltaTime > 0)
+    //    //{
+    //    //    Vector3 v = (animator.deltaPosition * 1) / Time.fixedDeltaTime;
 
-        //    // we preserve the existing y part of the current velocity.
-        //    v.y = characterControl.RIGID_BODY.velocity.y;
-        //    characterControl.RIGID_BODY.MovePosition(characterControl.RIGID_BODY.position + v * Time.fixedDeltaTime);
-        //    //characterControl.RIGID_BODY.velocity = v;
-        //}
-    }
+    //    //    // we preserve the existing y part of the current velocity.
+    //    //    v.y = characterControl.RIGID_BODY.velocity.y;
+    //    //    characterControl.RIGID_BODY.MovePosition(characterControl.RIGID_BODY.position + v * Time.fixedDeltaTime);
+    //    //    //characterControl.RIGID_BODY.velocity = v;
+    //    //}
+    //}
     
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {

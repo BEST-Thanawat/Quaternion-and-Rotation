@@ -378,6 +378,11 @@ public class CharacterControl : MonoBehaviour
 
     //private void OnAnimatorMove()
     //{
+    //    RIGID_BODY.velocity = Velocity;
+    //}
+
+    //private void OnAnimatorMove()
+    //{
     //    // we implement this function to override the default root motion.
     //        // this allows us to modify the positional speed before it's applied.
     //        if (m_IsGrounded && Time.deltaTime > 0)

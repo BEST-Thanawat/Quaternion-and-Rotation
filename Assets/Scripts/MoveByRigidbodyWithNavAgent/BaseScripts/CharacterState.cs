@@ -22,14 +22,13 @@ public class CharacterState : StateMachineBehaviour
     {
         UpdateAll(this, animator, stateInfo);
     }
-    public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        foreach (StateData d in ListAbilityData)
-        {
-            d.OnMove(this, animator, stateInfo);
-        }
-        //base.OnStateMove(animator, stateInfo, layerIndex);
-    }
+    //public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    foreach (StateData d in ListAbilityData)
+    //    {
+    //        d.OnMove(this, animator, stateInfo);
+    //    }
+    //}
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -51,7 +50,8 @@ public class CharacterState : StateMachineBehaviour
     {
         if(characterControl == null)
         {
-            characterControl = animator.GetComponent<CharacterControl>();
+            //characterControl = animator.GetComponent<CharacterControl>();
+            characterControl = animator.GetComponentInParent<CharacterControl>();
         }
         return characterControl;
     }
