@@ -4,21 +4,21 @@ using UnityEngine;
 public class RigidMover : MonoBehaviour
 {
 	[SerializeField, Range(0f, 100f)]
-	float maxSpeed = 10f;
+	float maxSpeed = 0f;
 
 	[SerializeField, Range(0f, 100f)]
-	float maxAcceleration = 10f, maxAirAcceleration = 1f;
+	float maxAcceleration = 100f, maxAirAcceleration = 0f;
 
 	[SerializeField, Range(0f, 10f)]
-	float jumpHeight = 2f;
+	float jumpHeight = 0f;
 
 	[SerializeField, Range(0, 5)]
 	int maxAirJumps = 0;
 
 	[SerializeField, Range(0, 90)]
-	float maxGroundAngle = 25f;
+	float maxGroundAngle = 89f;
 	[SerializeField, Range(0, 90)]
-	float maxStairsAngle = 50f;
+	float maxStairsAngle = 89f;
 
 	[SerializeField, Range(0f, 100f)]
 	float maxSnapSpeed = 100f;
@@ -48,7 +48,7 @@ public class RigidMover : MonoBehaviour
 
 	void OnValidate()
 	{
-		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
+		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad); //Ex. Angle 90 degree convert to radius to find Cos
 		minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
 	}
 

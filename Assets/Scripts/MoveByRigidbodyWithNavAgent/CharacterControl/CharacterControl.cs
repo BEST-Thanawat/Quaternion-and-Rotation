@@ -23,6 +23,8 @@ public enum TransitionParameter
     Attack
 }
 
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(RigidMover))]
+[RequireComponent(typeof(ManualInput), typeof(DamageDetector))]
 public class CharacterControl : MonoBehaviour
 {
     public Animator CharacterAnimator;
