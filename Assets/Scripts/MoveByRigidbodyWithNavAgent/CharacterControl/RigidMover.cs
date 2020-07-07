@@ -56,14 +56,12 @@ public class RigidMover : MonoBehaviour
 
 	void Update()
 	{
-		Vector2 playerInput;
-		playerInput.x = characterControl.KeyboardPressedValue.x ;
-		playerInput.y = characterControl.KeyboardPressedValue.y;
-		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+		//Vector2 playerInput;
+		//playerInput.x = characterControl.KeyboardPressedValue.x ;
+		//playerInput.y = characterControl.KeyboardPressedValue.y;
+		//playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 
-		desiredVelocity =
-			new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
-
+		desiredVelocity = characterControl.RIGID_BODY.rotation * new Vector3(characterControl.KeyboardPressedValue.x, 0f, characterControl.KeyboardPressedValue.y) * maxSpeed;
 		//desiredJump |= VirtualInputManager.Instance.Jump;
 	}
 
@@ -85,17 +83,9 @@ public class RigidMover : MonoBehaviour
 		//characterControl.RIGID_BODY.velocity = Vector3.Project(velocity, characterControl.ClickPosition.normalized);
 		//characterControl.RIGID_BODY.AddRelativeForce(characterControl.ClickPosition);
 
-		Ray ray = Camera.main.ScreenPointToRay(characterControl.MousePosition);
-		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
-		{
-			Vector3 rotatedVelocity = Quaternion.LookRotation(hit.point - transform.position) * velocity;
-			//directionSpeed = rotatedVelocity.z;
+		
 
-			characterControl.RIGID_BODY.velocity = rotatedVelocity;//velocity;
-		}
-
-		//characterControl.RIGID_BODY.velocity = velocity;
+		characterControl.RIGID_BODY.velocity = velocity;
 		ClearState();
 	}
 
