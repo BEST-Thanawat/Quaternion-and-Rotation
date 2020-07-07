@@ -413,10 +413,9 @@ public class CharacterControl : MonoBehaviour
     private void OnAnimatorMove()
     {
         //Default root motion
+        //We also received velocity from RigidMover as well to improve the mevement.
         transform.position = CharacterAnimator.rootPosition;
         transform.rotation = CharacterAnimator.rootRotation;
-        //_velocity += tr.right * characterInput.GetHorizontalMovementInput();
-        //_velocity += tr.forward * characterInput.GetVerticalMovementInput();
 
 
 

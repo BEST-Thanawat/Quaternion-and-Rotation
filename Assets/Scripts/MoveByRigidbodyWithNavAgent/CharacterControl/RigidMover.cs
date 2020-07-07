@@ -86,15 +86,7 @@ public class RigidMover : MonoBehaviour
 		//characterControl.RIGID_BODY.velocity = Vector3.Project(velocity, characterControl.ClickPosition.normalized);
 		//characterControl.RIGID_BODY.AddRelativeForce(characterControl.ClickPosition);
 
-		characterControl.RIGID_BODY.velocity = velocity;
-		//if (characterControl.KeyboardPressedValue.x == 0f && characterControl.KeyboardPressedValue.y == 0f && OnGround && !characterControl.RIGID_BODY.isKinematic)
-		//{
-		//	characterControl.RIGID_BODY.isKinematic = true;
-		//}
-		//else
-		//{
-		//	characterControl.RIGID_BODY.isKinematic = false;
-		//}
+		characterControl.RIGID_BODY.velocity = velocity;  //We also set velocity to CharacterControl to help root motion movement.
 		ClearState();
 	}
 
@@ -138,10 +130,18 @@ public class RigidMover : MonoBehaviour
 		{
 			return false;
 		}
-		if (!Physics.Raycast(characterControl.RIGID_BODY.position, Vector3.down, out RaycastHit hit,probeDistance, probeMask))
+
+		RaycastHit hit;
+
+		if(!Utility.Instance.IsGrounded(characterControl, probeDistance, out hit, probeMask))
 		{
 			return false;
 		}
+		//if (!Physics.Raycast(characterControl.RIGID_BODY.position, Vector3.down, out RaycastHit hit, probeDistance, probeMask))
+		//{
+		//	return false;
+		//}
+
 		if (hit.normal.y < GetMinDot(hit.collider.gameObject.layer))
 		{
 			return false;
@@ -154,7 +154,7 @@ public class RigidMover : MonoBehaviour
 		{
 			velocity = (velocity - hit.normal * dot).normalized * speed;
 		}
-		
+
 		return true;
 	}
 
