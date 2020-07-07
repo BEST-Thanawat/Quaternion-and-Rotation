@@ -188,8 +188,14 @@ public class CharacterControl : MonoBehaviour
         GameObject topBack = CreateEdgeSphere(this.transform.localPosition + new Vector3(0f, top - bottom, back));
         GameObject bottomLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(left, GroundCheckOffset, 0f));
         GameObject bottomRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(right, GroundCheckOffset, 0f));
+        GameObject bottomCenter = CreateEdgeSphere(this.transform.localPosition + new Vector3(0f, GroundCheckOffset, 0f));
         GameObject topLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(left, top - bottom, 0f));
         GameObject topRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(right, top - bottom, 0f));
+
+        GameObject bottomFrontLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(0f, top / 3, front));
+        GameObject bottomBackLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(0f, top / 3, back));
+        GameObject bottomLeftLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(left, top / 3, 0f));
+        GameObject bottomRightLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(right, top / 3, 0f));
 
         //GameObject checkFront = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, front - 0.02f));
         //GameObject checkBack = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, back + 0.025f));
@@ -208,13 +214,24 @@ public class CharacterControl : MonoBehaviour
         topBack.transform.parent = this.transform;
         bottomLeft.transform.parent = this.transform;
         bottomRight.transform.parent = this.transform;
+        bottomCenter.transform.parent = this.transform;
         topLeft.transform.parent = this.transform;
         topRight.transform.parent = this.transform;
+
+        bottomFrontLV2.transform.parent = this.transform;
+        bottomBackLV2.transform.parent = this.transform;
+        bottomLeftLV2.transform.parent = this.transform;
+        bottomRightLV2.transform.parent = this.transform;
 
         BottomSpheres.Add(bottomFront);
         BottomSpheres.Add(bottomBack);
         BottomSpheres.Add(bottomLeft);
         BottomSpheres.Add(bottomRight);
+        BottomSpheres.Add(bottomCenter);
+        BottomSpheres.Add(bottomFrontLV2);
+        BottomSpheres.Add(bottomBackLV2);
+        BottomSpheres.Add(bottomLeftLV2);
+        BottomSpheres.Add(bottomRightLV2);
 
         FrontSpheres.Add(bottomFront);
         FrontSpheres.Add(topFront);
@@ -310,9 +327,6 @@ public class CharacterControl : MonoBehaviour
     {
         if (MouseClicked)
         {
-            relativePosition = ClickPosition - RIGID_BODY.position;
-            relativePosition.y = 0f;
-            targetRotation = Quaternion.LookRotation(relativePosition);
             //Debug.Log(relativePosition);
             //Debug.Log(targetRotation);
             trigggerClickToMove = true;
@@ -321,11 +335,26 @@ public class CharacterControl : MonoBehaviour
     }
     private void ClickToMoveFixedUpdate()
     {
+        
+        //Debug.Log("New " + deltaRotation);
+        //Debug.Log("Old " + targetRotation);
+        //rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
         if (trigggerClickToMove)
         {
             isMoving = true;
+
+            //Rigidbody rotation way 1
+            relativePosition = ClickPosition - RIGID_BODY.position;
+            relativePosition.y = 0f;
+            targetRotation = Quaternion.LookRotation(relativePosition);
             rotationTime += Time.deltaTime * RotateSpeed;
             RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+            ////Rigidbody rotation way 2
+            //float angle = Mathf.Atan2(transform.InverseTransformPoint(ClickPosition).x, transform.InverseTransformPoint(ClickPosition).z) * Mathf.Rad2Deg;
+            //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
+            //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
+            //RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
 
             remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
             if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
@@ -340,8 +369,28 @@ public class CharacterControl : MonoBehaviour
                 IsArrived = false;
             }
         }
+
+        //if (trigggerClickToMove)
+        //{
+        //    isMoving = true;
+        //    rotationTime += Time.deltaTime * RotateSpeed;
+        //    RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+        //    remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+        //    if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+        //    {
+        //        trigggerClickToMove = false;
+        //        IsArrived = true;
+
+        //        StartCoroutine(SetIsMovindToFalse(0.4f));
+        //    }
+        //    else
+        //    {
+        //        IsArrived = false;
+        //    }
+        //}
     }
-    
+
     private void FaceToMouse()
     {
         if (transform.GetComponent<ManualInput>().enabled)
