@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class KinematicMovement : MonoBehaviour
+public class KinematicMovement_X : MonoBehaviour
 {
 	public Vector3 Velocity;
 	[SerializeField, Range(0f, 100f)]

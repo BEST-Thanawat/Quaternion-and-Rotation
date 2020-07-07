@@ -6,7 +6,7 @@ using UnityEngine;
 
 // The class that takes care of all the player related physics
 // Many configurable parameters with defaults set as the recommended values in BBR
-public class StepClimber : MonoBehaviour
+public class StepClimber_X : MonoBehaviour
 {
     //Remember 1 unit is 1 meter (the physics engine was made with this ratio in mind)
     [Header("Steps")]

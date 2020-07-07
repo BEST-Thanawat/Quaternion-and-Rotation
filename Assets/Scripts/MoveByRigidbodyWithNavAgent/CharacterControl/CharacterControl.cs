@@ -22,6 +22,7 @@ public enum TransitionParameter
     Crouch,
     Attack
 }
+
 public class CharacterControl : MonoBehaviour
 {
     public Animator CharacterAnimator;
@@ -188,16 +189,16 @@ public class CharacterControl : MonoBehaviour
         GameObject topLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(left, top - bottom, 0f));
         GameObject topRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(right, top - bottom, 0f));
 
-        GameObject checkFront = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, front - 0.02f));
-        GameObject checkBack = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, back + 0.025f));
-        GameObject checkLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(left + 0.02f, top, 0f));
-        GameObject checkRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(right - 0.02f, top, 0f));
-        GameObject checkCenter = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, 0));
-        checkFront.transform.parent = this.transform;
-        checkBack.transform.parent = this.transform;
-        checkLeft.transform.parent = this.transform;
-        checkRight.transform.parent = this.transform;
-        checkCenter.transform.parent = this.transform;
+        //GameObject checkFront = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, front - 0.02f));
+        //GameObject checkBack = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, back + 0.025f));
+        //GameObject checkLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(left + 0.02f, top, 0f));
+        //GameObject checkRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(right - 0.02f, top, 0f));
+        //GameObject checkCenter = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, 0));
+        //checkFront.transform.parent = this.transform;
+        //checkBack.transform.parent = this.transform;
+        //checkLeft.transform.parent = this.transform;
+        //checkRight.transform.parent = this.transform;
+        //checkCenter.transform.parent = this.transform;
 
         bottomFront.transform.parent = this.transform;
         bottomBack.transform.parent = this.transform;
@@ -225,11 +226,11 @@ public class CharacterControl : MonoBehaviour
         RightSpheres.Add(bottomRight);
         RightSpheres.Add(topRight);
 
-        GroundCheckSpheres.Add(checkFront);
-        GroundCheckSpheres.Add(checkBack);
-        GroundCheckSpheres.Add(checkLeft);
-        GroundCheckSpheres.Add(checkRight);
-        GroundCheckSpheres.Add(checkCenter);
+        //GroundCheckSpheres.Add(checkFront);
+        //GroundCheckSpheres.Add(checkBack);
+        //GroundCheckSpheres.Add(checkLeft);
+        //GroundCheckSpheres.Add(checkRight);
+        //GroundCheckSpheres.Add(checkCenter);
 
         //Create children spheres
         float horSec = (bottomFront.transform.position - bottomBack.transform.position).magnitude / 3f;
@@ -257,12 +258,6 @@ public class CharacterControl : MonoBehaviour
         ClickToMoveUpdate();
     }
 
-    List<Vector3> arrayNormals = new List<Vector3>();
-    List<Vector3> arrayPoints = new List<Vector3>();
-    Vector3 hitPosition = Vector3.zero;
-    Vector3 hitNormal = Vector3.zero;
-    
-    Vector3 currentGroundAdjustmentVelocity = Vector3.zero;
     private void FixedUpdate()
     {
         if (RIGID_BODY.velocity.y < 0f)
@@ -274,6 +269,8 @@ public class CharacterControl : MonoBehaviour
         {
             RIGID_BODY.velocity += (Vector3.down * PullMultiplier);
         }
+
+        //RIGID_BODY.velocity = Velocity;
 
         ClickToMoveFixedUpdate();
 
@@ -295,55 +292,6 @@ public class CharacterControl : MonoBehaviour
         //{
         //    MustMove = true;
         //}
-        arrayNormals.Clear();
-        arrayPoints.Clear();
-
-        foreach (GameObject o in GroundCheckSpheres)
-        {
-            Debug.DrawRay(o.transform.position, Vector3.down * 10f, Color.magenta);
-            RaycastHit hit;
-            if (Physics.Raycast(o.transform.position, Vector3.down, out hit, 10f))
-            {
-                //Ignore own player part.
-                if (!RagdollParts.Contains(hit.collider))
-                {
-                    float length = hit.distance;
-                    arrayNormals.Add(hit.normal);
-                    arrayPoints.Add(hit.point);
-                }
-            }
-        }
-
-        Vector3 _averageNormal = Vector3.zero;
-        foreach (Vector3 v in arrayNormals)
-        {
-            _averageNormal += v.normalized;
-        }
-        _averageNormal = _averageNormal.normalized;
-
-        Vector3 _averagePoint = Vector3.zero;
-        foreach (Vector3 v in arrayPoints)
-        {
-            _averagePoint += v;
-        }
-        _averagePoint /= arrayPoints.Count;
-
-        CapsuleCollider capsule = GetComponent<CapsuleCollider>();
-        hitPosition = _averagePoint;
-        hitNormal = _averageNormal;
-        float hitDistance = ExtractDotVector(capsule.bounds.center - hitPosition, Vector3.down).magnitude;
-        //Debug.Log("vvvvvvvvvvvvvvvv" + hitPosition + " " + hitNormal + " " + hitDistance);
-
-        float middle = capsule.center.y;
-        float distanceToGo = Mathf.Approximately(middle, hitDistance) ? 0f : middle - hitDistance;
-        //Debug.Log("vvvvvvvvvvvvvvvv" + middle + " " + distanceToGo);
-
-        currentGroundAdjustmentVelocity = transform.up * (distanceToGo / Time.fixedDeltaTime);
-        Debug.Log("vvvvvv" + currentGroundAdjustmentVelocity * 3000f);
-        //currentGroundAdjustmentVelocity = tr.up * (hitDistance / Time.fixedDeltaTime);
-        //hitDistance = ExtractDotVector(transform.TransformPoint(transform.InverseTransformPoint(transform.GetComponent<Collider>().bounds.center)) - hitPosition, Vector3.down);.magnitude;
-
-        
     }
     public static Vector3 ExtractDotVector(Vector3 _vector, Vector3 _direction)
     {
@@ -462,17 +410,22 @@ public class CharacterControl : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-        //RIGID_BODY.velocity = Velocity;// * CharacterAnimator.speed;
+        //_velocity += tr.right * characterInput.GetHorizontalMovementInput();
+        //_velocity += tr.forward * characterInput.GetVerticalMovementInput();
 
-        if (Time.deltaTime > 0)
-        {
-            Vector3 v = (CharacterAnimator.deltaPosition * 1f) / Time.fixedDeltaTime;
-            v.y = RIGID_BODY.velocity.y;
-            RIGID_BODY.velocity = v + currentGroundAdjustmentVelocity;
 
-            //// we preserve the existing y part of the current velocity.
-            //RIGID_BODY.velocity = Velocity + currentGroundAdjustmentVelocity;
-        }
+
+        // * CharacterAnimator.speed;
+
+        //if (Time.deltaTime > 0)
+        //{
+        //    Vector3 v = (CharacterAnimator.deltaPosition * 1f) / Time.fixedDeltaTime;
+        //    v.y = RIGID_BODY.velocity.y;
+        //    RIGID_BODY.velocity = v.normalized + currentGroundAdjustmentVelocity;
+
+        //    //// we preserve the existing y part of the current velocity.
+        //    //RIGID_BODY.velocity = Velocity + currentGroundAdjustmentVelocity;
+        //}
     }
 
     //private void OnAnimatorMove()
