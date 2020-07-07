@@ -410,6 +410,9 @@ public class CharacterControl : MonoBehaviour
 
     private void OnAnimatorMove()
     {
+        //Default root motion
+        transform.position = CharacterAnimator.rootPosition;
+        transform.rotation = CharacterAnimator.rootRotation;
         //_velocity += tr.right * characterInput.GetHorizontalMovementInput();
         //_velocity += tr.forward * characterInput.GetVerticalMovementInput();
 

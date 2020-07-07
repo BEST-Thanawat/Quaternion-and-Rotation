@@ -34,7 +34,12 @@ public class RigidMover : MonoBehaviour
 	//bool desiredJump;
 	Vector3 contactNormal, steepNormal;
 	int groundContactCount, steepContactCount;
-	bool OnGround => groundContactCount > 0;
+
+	[SerializeField]
+	private bool OnGround;
+	[SerializeField]
+	private bool IsDebugging;
+	//bool OnGround => groundContactCount > 0;
 	bool OnSteep => steepContactCount > 0;
 	//int jumpPhase;
 	float minGroundDotProduct, minStairsDotProduct;
@@ -56,6 +61,8 @@ public class RigidMover : MonoBehaviour
 
 	void Update()
 	{
+		OnGround = groundContactCount > 0 ? true : false;
+
 		//Vector2 playerInput;
 		//playerInput.x = characterControl.KeyboardPressedValue.x ;
 		//playerInput.y = characterControl.KeyboardPressedValue.y;
@@ -69,7 +76,6 @@ public class RigidMover : MonoBehaviour
 	{
 		UpdateState();
 		AdjustVelocity();
-
 		//if (desiredJump)
 		//{
 		//	desiredJump = false;
@@ -77,15 +83,18 @@ public class RigidMover : MonoBehaviour
 		//}
 		//Vector3 force = new Vector3(playerInput.x, 0.0F, zForce);
 
-
-
-
 		//characterControl.RIGID_BODY.velocity = Vector3.Project(velocity, characterControl.ClickPosition.normalized);
 		//characterControl.RIGID_BODY.AddRelativeForce(characterControl.ClickPosition);
 
-		
-
 		characterControl.RIGID_BODY.velocity = velocity;
+		//if (characterControl.KeyboardPressedValue.x == 0f && characterControl.KeyboardPressedValue.y == 0f && OnGround && !characterControl.RIGID_BODY.isKinematic)
+		//{
+		//	characterControl.RIGID_BODY.isKinematic = true;
+		//}
+		//else
+		//{
+		//	characterControl.RIGID_BODY.isKinematic = false;
+		//}
 		ClearState();
 	}
 
@@ -145,6 +154,7 @@ public class RigidMover : MonoBehaviour
 		{
 			velocity = (velocity - hit.normal * dot).normalized * speed;
 		}
+		
 		return true;
 	}
 
@@ -234,6 +244,7 @@ public class RigidMover : MonoBehaviour
 		for (int i = 0; i < collision.contactCount; i++)
 		{
 			Vector3 normal = collision.GetContact(i).normal;
+			
 			if (normal.y >= minDot)
 			{
 				groundContactCount += 1;
@@ -244,11 +255,17 @@ public class RigidMover : MonoBehaviour
 				steepContactCount += 1;
 				steepNormal += normal;
 			}
+			if (IsDebugging)
+			{
+				Debug.DrawRay(characterControl.RIGID_BODY.position, contactNormal.normalized, Color.blue, 0.5f);
+				Debug.DrawRay(characterControl.RIGID_BODY.position, normal.normalized, Color.cyan, 0.5f);
+			}
 		}
 	}
 
 	Vector3 ProjectOnContactPlane(Vector3 vector)
 	{
+		//if (IsDebugging) Debug.DrawRay(characterControl.RIGID_BODY.position, vector - contactNormal * Vector3.Dot(vector, contactNormal), Color.red, 0.5f);
 		return vector - contactNormal * Vector3.Dot(vector, contactNormal);
 	}
 
