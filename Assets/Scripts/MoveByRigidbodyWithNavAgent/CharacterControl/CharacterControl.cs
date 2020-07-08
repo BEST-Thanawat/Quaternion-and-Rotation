@@ -347,7 +347,7 @@ public class CharacterControl : MonoBehaviour
             relativePosition = ClickPosition - RIGID_BODY.position;
             relativePosition.y = 0f;
             targetRotation = Quaternion.LookRotation(relativePosition);
-            rotationTime += Time.deltaTime * RotateSpeed;
+            rotationTime += Time.fixedDeltaTime * RotateSpeed;
             RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
 
             ////Rigidbody rotation way 2

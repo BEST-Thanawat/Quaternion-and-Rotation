@@ -7,9 +7,11 @@ public class Toggle : StateData
 {
     [Range(0.01f, 1f)]
     public float CheckTime;
+
+    private bool toggle = false;
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-
+        
     }
 
     public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)

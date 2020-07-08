@@ -55,6 +55,9 @@ public class WalkForward : StateData
         if (characterControl.PressedC)
         {
             animator.SetBool(TransitionParameter.Crouch.ToString(), true);
+            CapsuleCollider collider = characterControl.GetComponent<CapsuleCollider>();
+            collider.height = (2 / 1.5f);
+            collider.center = new Vector3(0, 0.5f, 0);
         }
 
         if (characterControl.Jump)

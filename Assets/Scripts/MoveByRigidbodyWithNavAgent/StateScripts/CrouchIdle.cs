@@ -7,9 +7,11 @@ public class CrouchIdle : StateData
 {
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-
+        //CharacterControl characterControl = characterState.GetCharacterControl(animator);
+        //CapsuleCollider collider = characterControl.GetComponent<CapsuleCollider>();
+        //collider.height = (2 / 1.5f);
+        //collider.center = new Vector3(0, 0.5f, 0);
     }
-
     public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
         CharacterControl characterControl = characterState.GetCharacterControl(animator);
