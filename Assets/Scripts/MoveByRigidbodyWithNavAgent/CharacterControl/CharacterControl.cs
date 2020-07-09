@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Pathfinding;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -92,6 +93,15 @@ public class CharacterControl : MonoBehaviour
     private float rotationTimeFaceToMouse = 0;
     private Rigidbody rigid;
     private List<TriggerDetector> TriggerDetectors = new List<TriggerDetector>();
+
+    private AIDestinationSetter aiDestinationSetter;
+    private Seeker seeker;
+    private Path path;
+    private float nextWaypointDistance = 3;
+    private int currentWaypoint = 0;
+    private bool reachedEndOfPath;
+
+
     public Rigidbody RIGID_BODY
     {
         get
@@ -106,6 +116,11 @@ public class CharacterControl : MonoBehaviour
 
     private void Awake()
     {
+        aiDestinationSetter = GetComponent<AIDestinationSetter>();
+        seeker = GetComponent<Seeker>();
+        // OnPathComplete will be called every time a path is returned to this seeker
+        seeker.pathCallback += OnPathComplete;
+
         //SetRagdollParts();
         SetColliderSpheres();
 
@@ -327,28 +342,52 @@ public class CharacterControl : MonoBehaviour
     {
         if (MouseClicked)
         {
-            //Debug.Log(relativePosition);
-            //Debug.Log(targetRotation);
+            path = null;
+            seeker.StartPath(RIGID_BODY.position, ClickPosition);
+            
             trigggerClickToMove = true;
             rotationTime = 0;
+        }
+        ////if (MouseClicked)
+        ////{
+        ////    //Debug.Log(relativePosition);
+        ////    //Debug.Log(targetRotation);
+        ////    trigggerClickToMove = true;
+        ////    rotationTime = 0;
+        ////}
+    }
+    public void OnDisable()
+    {
+        seeker.pathCallback -= OnPathComplete;
+    }
+    public void OnPathComplete(Path p)
+    {
+        Debug.Log("OnPathComplete");
+        // We got our path back
+        if (p.error)
+        {
+            // Nooo, a valid path couldn't be found
+        }
+        else
+        {
+            path = p;
+            currentWaypoint = 0;
         }
     }
     private void ClickToMoveFixedUpdate()
     {
-        
-        //Debug.Log("New " + deltaRotation);
-        //Debug.Log("Old " + targetRotation);
-        //rigidbody.MoveRotation(rigidbody.rotation * deltaRotation);
+        if (path == null)
+        {
+            // We have no path to follow yet, so don't do anything
+            return;
+        }
+
         if (trigggerClickToMove)
         {
             isMoving = true;
 
             //Rigidbody rotation way 1
-            relativePosition = ClickPosition - RIGID_BODY.position;
-            relativePosition.y = 0f;
-            targetRotation = Quaternion.LookRotation(relativePosition);
-            rotationTime += Time.fixedDeltaTime * RotateSpeed;
-            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
 
             ////Rigidbody rotation way 2
             //float angle = Mathf.Atan2(transform.InverseTransformPoint(ClickPosition).x, transform.InverseTransformPoint(ClickPosition).z) * Mathf.Rad2Deg;
@@ -356,19 +395,68 @@ public class CharacterControl : MonoBehaviour
             //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
             //RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
 
-            remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+
+            Debug.Log(currentWaypoint);
+            relativePosition = path.vectorPath[currentWaypoint] - RIGID_BODY.position;
+            relativePosition.y = 0f;
+            targetRotation = Quaternion.LookRotation(relativePosition);
+            rotationTime += Time.fixedDeltaTime * RotateSpeed;
+            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+            remainingDistance = Vector3.Distance(RIGID_BODY.position, path.vectorPath[currentWaypoint]);
+            
             if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
             {
-                trigggerClickToMove = false;
-                IsArrived = true;
+                if (currentWaypoint + 1 < path.vectorPath.Count)
+                {
+                    currentWaypoint++;
+                    rotationTime = 0;
+                }
+                else
+                {
+                    trigggerClickToMove = false;
+                    IsArrived = true;
 
-                StartCoroutine(SetIsMovindToFalse(0.4f));
+                    StartCoroutine(SetIsMovingToFalse(0.4f));
+                }
             }
             else
             {
                 IsArrived = false;
             }
         }
+
+
+        ////if (trigggerClickToMove)
+        ////{
+        ////    isMoving = true;
+
+        ////    //Rigidbody rotation way 1
+        ////    relativePosition = ClickPosition - RIGID_BODY.position;
+        ////    relativePosition.y = 0f;
+        ////    targetRotation = Quaternion.LookRotation(relativePosition);
+        ////    rotationTime += Time.fixedDeltaTime * RotateSpeed;
+        ////    RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+        ////    ////Rigidbody rotation way 2
+        ////    //float angle = Mathf.Atan2(transform.InverseTransformPoint(ClickPosition).x, transform.InverseTransformPoint(ClickPosition).z) * Mathf.Rad2Deg;
+        ////    //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
+        ////    //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
+        ////    //RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
+
+        ////    remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+        ////    if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+        ////    {
+        ////        trigggerClickToMove = false;
+        ////        IsArrived = true;
+
+        ////        StartCoroutine(SetIsMovingToFalse(0.4f));
+        ////    }
+        ////    else
+        ////    {
+        ////        IsArrived = false;
+        ////    }
+        ////}
 
         //if (trigggerClickToMove)
         //{
@@ -453,7 +541,7 @@ public class CharacterControl : MonoBehaviour
         return obj;
     }
 
-    IEnumerator SetIsMovindToFalse(float seconds)
+    IEnumerator SetIsMovingToFalse(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         isMoving = false;

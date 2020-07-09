@@ -375,3 +375,8 @@ healthchecksdb
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/InputMaster/InputMaster.inputactions
 /Assets/Character Movement Fundamentals
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/Physics Materials
+/Assets/AstarPathfindingProject
+/Assets/_TerrainAutoUpgrade
+/PackageToolsEditor.csproj
+/AstarPathfindingProjectEditor.csproj
+/AstarPathfindingProject.csproj
