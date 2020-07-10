@@ -307,6 +307,7 @@ public class CharacterControl : MonoBehaviour
         //RIGID_BODY.velocity = Velocity;
 
         ClickToMoveFixedUpdate();
+        DragToMoveFixedUpdate();
 
         if (!isMoving)
         {
@@ -364,42 +365,62 @@ public class CharacterControl : MonoBehaviour
     {
         Debug.Log("OnPathComplete");
         // We got our path back
-        if (p.error)
-        {
-            // Nooo, a valid path couldn't be found
-        }
-        else
+        if (!p.error)
         {
             path = p;
             currentWaypoint = 0;
+        }
+        else
+        {
+            Debug.LogError(p.errorLog);
+        }
+    }
+
+    private void DragToMoveFixedUpdate()
+    {
+        if (path == null && trigggerClickToMove)
+        {
+            isMoving = true;
+
+            //Rigidbody rotation way 1
+            relativePosition = ClickPosition - RIGID_BODY.position;
+            relativePosition.y = 0f;
+            targetRotation = Quaternion.LookRotation(relativePosition);
+            rotationTime += Time.fixedDeltaTime * RotateSpeed;
+            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+            remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+            if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+            {
+                trigggerClickToMove = false;
+                IsArrived = true;
+
+                StartCoroutine(SetIsMovingToFalse(0.4f));
+            }
+            else
+            {
+                IsArrived = false;
+            }
         }
     }
     private void ClickToMoveFixedUpdate()
     {
         if (path == null)
         {
-            // We have no path to follow yet, so don't do anything
             return;
         }
 
-        if (trigggerClickToMove)
+        if (trigggerClickToMove && path != null)
         {
             isMoving = true;
 
-            //Rigidbody rotation way 1
-
-
-            ////Rigidbody rotation way 2
-            //float angle = Mathf.Atan2(transform.InverseTransformPoint(ClickPosition).x, transform.InverseTransformPoint(ClickPosition).z) * Mathf.Rad2Deg;
-            //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
-            //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
-            //RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
-
-
-            Debug.Log(currentWaypoint);
+            //Debug.Log(currentWaypoint);
             relativePosition = path.vectorPath[currentWaypoint] - RIGID_BODY.position;
             relativePosition.y = 0f;
-            targetRotation = Quaternion.LookRotation(relativePosition);
+            if(relativePosition != Vector3.zero)
+            {
+                targetRotation = Quaternion.LookRotation(relativePosition);
+            }
             rotationTime += Time.fixedDeltaTime * RotateSpeed;
             RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
 
@@ -545,6 +566,7 @@ public class CharacterControl : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         isMoving = false;
+        path = null;
     }
 
     private void OnAnimatorMove()
