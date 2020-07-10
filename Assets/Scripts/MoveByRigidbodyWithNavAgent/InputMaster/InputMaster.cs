@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/InputMaster.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/MoveByRigidbodyWithNavAgent/InputMaster/InputMaster.inputactions'
 
 using System;
 using System.Collections;
@@ -19,14 +19,6 @@ public class @InputMaster : IInputActionCollection, IDisposable
             ""id"": ""8bc726d8-f4c5-4431-aa89-185f9de6ecea"",
             ""actions"": [
                 {
-                    ""name"": ""ClickToMove"",
-                    ""type"": ""Value"",
-                    ""id"": ""8b9e0cad-afda-4916-8447-89d0c3dbc27e"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Movement"",
                     ""type"": ""PassThrough"",
                     ""id"": ""a4a7d34e-34be-45fe-ba6f-94b8c204ff8a"",
@@ -35,7 +27,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Turn"",
+                    ""name"": ""MousePosition"",
                     ""type"": ""Value"",
                     ""id"": ""3065a9cf-882d-46c9-a03c-a388175dee9e"",
                     ""expectedControlType"": ""Vector2"",
@@ -49,20 +41,17 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""10e1dd8e-989a-4a13-9e26-b703fa40ed69"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""3f101128-97a8-4579-902e-e7dac7be6df4"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and mouse"",
-                    ""action"": ""ClickToMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": ""WSADKeys"",
                     ""id"": ""5e576379-c574-404b-9051-6a683ab8f7db"",
@@ -125,7 +114,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard and mouse"",
-                    ""action"": ""Turn"",
+                    ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -137,6 +126,17 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and mouse"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3819789-108e-4241-b6c3-fc11c44b7c6b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press,Hold"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and mouse"",
+                    ""action"": ""MouseClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -175,10 +175,10 @@ public class @InputMaster : IInputActionCollection, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_ClickToMove = m_Player.FindAction("ClickToMove", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
-        m_Player_Turn = m_Player.FindAction("Turn", throwIfNotFound: true);
+        m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_MouseClick = m_Player.FindAction("MouseClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -228,18 +228,18 @@ public class @InputMaster : IInputActionCollection, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
-    private readonly InputAction m_Player_ClickToMove;
     private readonly InputAction m_Player_Movement;
-    private readonly InputAction m_Player_Turn;
+    private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_MouseClick;
     public struct PlayerActions
     {
         private @InputMaster m_Wrapper;
         public PlayerActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
-        public InputAction @ClickToMove => m_Wrapper.m_Player_ClickToMove;
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
-        public InputAction @Turn => m_Wrapper.m_Player_Turn;
+        public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @MouseClick => m_Wrapper.m_Player_MouseClick;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -249,34 +249,34 @@ public class @InputMaster : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
-                @ClickToMove.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClickToMove;
-                @ClickToMove.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClickToMove;
-                @ClickToMove.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClickToMove;
                 @Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                @Turn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurn;
-                @Turn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurn;
-                @Turn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurn;
+                @MousePosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
+                @MousePosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
+                @MousePosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @MouseClick.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
+                @MouseClick.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
+                @MouseClick.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @ClickToMove.started += instance.OnClickToMove;
-                @ClickToMove.performed += instance.OnClickToMove;
-                @ClickToMove.canceled += instance.OnClickToMove;
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
-                @Turn.started += instance.OnTurn;
-                @Turn.performed += instance.OnTurn;
-                @Turn.canceled += instance.OnTurn;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @MouseClick.started += instance.OnMouseClick;
+                @MouseClick.performed += instance.OnMouseClick;
+                @MouseClick.canceled += instance.OnMouseClick;
             }
         }
     }
@@ -301,9 +301,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
     }
     public interface IPlayerActions
     {
-        void OnClickToMove(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
-        void OnTurn(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnMouseClick(InputAction.CallbackContext context);
     }
 }

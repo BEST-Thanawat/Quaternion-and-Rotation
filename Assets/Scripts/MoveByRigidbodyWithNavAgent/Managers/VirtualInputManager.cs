@@ -19,7 +19,8 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
 
     public bool Attack;
     public Vector3 ClickPosition;
-    public bool MouseClicked;
+    public bool MouseLeftClicked;
+    public bool MouseLeftHold;
     //public bool MustMove;
 
     public Vector3 Velocity;

@@ -1,4 +1,5 @@
 ﻿using Pathfinding;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,7 +69,8 @@ public class CharacterControl : MonoBehaviour
     //public float ForwardAmount = 1f;
 
     [Header("Click to Move")]
-    public bool MouseClicked;
+    public bool MouseLeftClicked;
+    public bool MouseLeftHold;
     public Vector3 ClickPosition; //Is hit.point
     public float StoppingDistance = 0.1f;
     [SerializeField] private float remainingDistance = 0;
@@ -85,7 +87,8 @@ public class CharacterControl : MonoBehaviour
     //private float speed = 4.5f;
     private bool isMoving = false;
 
-    private bool trigggerClickToMove = false;
+    private bool triggerLeftClicked = false;
+    private bool triggerLeftHold = false;
     private Vector3 relativePosition;
     private Quaternion targetRotation = Quaternion.identity;
     private float rotationTime;
@@ -100,7 +103,6 @@ public class CharacterControl : MonoBehaviour
     private float nextWaypointDistance = 3;
     private int currentWaypoint = 0;
     private bool reachedEndOfPath;
-
 
     public Rigidbody RIGID_BODY
     {
@@ -125,29 +127,31 @@ public class CharacterControl : MonoBehaviour
         SetColliderSpheres();
 
         //StartCoroutine(Start());
-
         //deltaRotation = Quaternion.identity;
     }
-
-    //IEnumerator Start()
-    //{
-    //    yield return new WaitForSeconds(5f);
-    //    RIGID_BODY.AddForce(400f * Vector3.up);
-    //    yield return new WaitForSeconds(0.5f);
-    //    TurnOnRagdoll();
-    //}
-    private void TurnOnRagdoll()
+    private void Update()
     {
-        RIGID_BODY.useGravity = false;
-        RIGID_BODY.velocity = Vector3.zero;
-        this.gameObject.GetComponent<CapsuleCollider>().enabled = false;
-        CharacterAnimator.enabled = false;
-        CharacterAnimator.avatar = null;
+        ClickToMoveUpdate();
+        HoldToMoveUpdate();
+    }
 
-        foreach (Collider c in RagdollParts)
+    private void FixedUpdate()
+    {
+        if (RIGID_BODY.velocity.y < 0f)
         {
-            c.isTrigger = false;
-            c.attachedRigidbody.velocity = Vector3.zero;
+            RIGID_BODY.velocity += (Vector3.down * GravityMultiplier);
+        }
+
+        if (RIGID_BODY.velocity.y > 0f && !Jump)
+        {
+            RIGID_BODY.velocity += (Vector3.down * PullMultiplier);
+        }
+
+        ClickToMoveFixedUpdate();
+
+        if (!isMoving)
+        {
+            FaceToMouse();
         }
     }
 
@@ -280,54 +284,7 @@ public class CharacterControl : MonoBehaviour
     }
 
     
-    private void Update()
-    {
-        //if(trigClickToMove) VirtualInputManager.Instance.PressedW = true;
-        //float f = Mathf.Lerp(0f, 100f, Timettt);
-        //Timettt += 0.1f * Time.deltaTime;
-        //Debug.Log(f);
-
-        //TestCo1();
-        //ClickToMove(ClickPosition);
-        ClickToMoveUpdate();
-    }
-
-    private void FixedUpdate()
-    {
-        if (RIGID_BODY.velocity.y < 0f)
-        {
-            RIGID_BODY.velocity += (Vector3.down * GravityMultiplier);
-        }
-
-        if (RIGID_BODY.velocity.y > 0f && !Jump)
-        {
-            RIGID_BODY.velocity += (Vector3.down * PullMultiplier);
-        }
-
-        //RIGID_BODY.velocity = Velocity;
-
-        ClickToMoveFixedUpdate();
-        DragToMoveFixedUpdate();
-
-        if (!isMoving)
-        {
-            FaceToMouse();
-        }
-
-        //if (MouseClicked && MustMove)
-        //{
-        //    MustMove = false;
-
-        //    StartCoroutine(TestCo());
-        //    //Move to position
-
-        //}
-
-        //if (MouseClicked)
-        //{
-        //    MustMove = true;
-        //}
-    }
+    
     public static Vector3 ExtractDotVector(Vector3 _vector, Vector3 _direction)
     {
         //Normalize vector if necessary;
@@ -341,21 +298,29 @@ public class CharacterControl : MonoBehaviour
 
     private void ClickToMoveUpdate()
     {
-        if (MouseClicked)
+        if (MouseLeftClicked)
         {
+            triggerLeftClicked = true;
             path = null;
             seeker.StartPath(RIGID_BODY.position, ClickPosition);
-            
-            trigggerClickToMove = true;
+
             rotationTime = 0;
         }
-        ////if (MouseClicked)
-        ////{
-        ////    //Debug.Log(relativePosition);
-        ////    //Debug.Log(targetRotation);
-        ////    trigggerClickToMove = true;
-        ////    rotationTime = 0;
-        ////}
+    }
+    private void HoldToMoveUpdate()
+    {
+        if (MouseLeftHold)
+        {
+            triggerLeftHold = true;
+            triggerLeftClicked = false;
+            path = null;
+
+            rotationTime = 0;
+        }
+        else
+        {
+            triggerLeftHold = false;
+        }
     }
     public void OnDisable()
     {
@@ -363,7 +328,7 @@ public class CharacterControl : MonoBehaviour
     }
     public void OnPathComplete(Path p)
     {
-        Debug.Log("OnPathComplete");
+        //Debug.Log("OnPathComplete");
         // We got our path back
         if (!p.error)
         {
@@ -376,42 +341,32 @@ public class CharacterControl : MonoBehaviour
         }
     }
 
-    private void DragToMoveFixedUpdate()
+    private void ClickToMoveFixedUpdate()
     {
-        if (path == null && trigggerClickToMove)
+        if (triggerLeftHold && path == null)
         {
+            Debug.Log(22);
             isMoving = true;
 
-            //Rigidbody rotation way 1
-            relativePosition = ClickPosition - RIGID_BODY.position;
-            relativePosition.y = 0f;
+            path = null;
+            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+            RaycastHit hit;
+            Vector3 relativeDirection = Vector3.zero;
+
+            if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
+            {
+                relativePosition = hit.point - RIGID_BODY.position;
+                relativePosition.y = 0f;
+            }
+
             targetRotation = Quaternion.LookRotation(relativePosition);
             rotationTime += Time.fixedDeltaTime * RotateSpeed;
             RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
-
-            remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
-            if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
-            {
-                trigggerClickToMove = false;
-                IsArrived = true;
-
-                StartCoroutine(SetIsMovingToFalse(0.4f));
-            }
-            else
-            {
-                IsArrived = false;
-            }
-        }
-    }
-    private void ClickToMoveFixedUpdate()
-    {
-        if (path == null)
-        {
-            return;
         }
 
-        if (trigggerClickToMove && path != null)
+        if (triggerLeftClicked && path != null)
         {
+            Debug.Log(11);
             isMoving = true;
 
             //Debug.Log(currentWaypoint);
@@ -435,10 +390,7 @@ public class CharacterControl : MonoBehaviour
                 }
                 else
                 {
-                    trigggerClickToMove = false;
-                    IsArrived = true;
-
-                    StartCoroutine(SetIsMovingToFalse(0.4f));
+                    triggerLeftClicked = false;
                 }
             }
             else
@@ -447,6 +399,11 @@ public class CharacterControl : MonoBehaviour
             }
         }
 
+        if (!triggerLeftHold && !triggerLeftClicked)
+        {
+            IsArrived = true;
+            isMoving = false;
+        }
 
         ////if (trigggerClickToMove)
         ////{
@@ -589,6 +546,28 @@ public class CharacterControl : MonoBehaviour
         //    //// we preserve the existing y part of the current velocity.
         //    //RIGID_BODY.velocity = Velocity + currentGroundAdjustmentVelocity;
         //}
+    }
+
+    //IEnumerator Start()
+    //{
+    //    yield return new WaitForSeconds(5f);
+    //    RIGID_BODY.AddForce(400f * Vector3.up);
+    //    yield return new WaitForSeconds(0.5f);
+    //    TurnOnRagdoll();
+    //}
+    private void TurnOnRagdoll()
+    {
+        RIGID_BODY.useGravity = false;
+        RIGID_BODY.velocity = Vector3.zero;
+        this.gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        CharacterAnimator.enabled = false;
+        CharacterAnimator.avatar = null;
+
+        foreach (Collider c in RagdollParts)
+        {
+            c.isTrigger = false;
+            c.attachedRigidbody.velocity = Vector3.zero;
+        }
     }
 
     //private void OnAnimatorMove()

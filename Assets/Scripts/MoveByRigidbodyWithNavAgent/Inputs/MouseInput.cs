@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 public class MouseInput : MonoBehaviour
 {
@@ -12,8 +13,11 @@ public class MouseInput : MonoBehaviour
 
     //private Mouse mouse;
     private InputMaster inputMaster;
-    private InputAction.CallbackContext contextClickToMove;
-    private Vector2 rotateValue;
+    //private InputAction.CallbackContext contextClickToMove;
+    private Vector2 MousePosition;
+
+    private InputAction LeftMouseClick;
+    private InputAction LeftMouseHold;
     //private Quaternion deltaRotation;
     //private Rigidbody rb;
     private void Awake()
@@ -22,9 +26,19 @@ public class MouseInput : MonoBehaviour
         //mouse = InputSystem.GetDevice<Mouse>();
 
         inputMaster = new InputMaster();
-        inputMaster.Player.ClickToMove.performed += context => contextClickToMove = context;
-        inputMaster.Player.Turn.performed += context => rotateValue = context.ReadValue<Vector2>();
+        LeftMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "press");
+        LeftMouseHold = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "hold(duration=0.8)");
+       
+        inputMaster.Player.MousePosition.performed += context => MousePosition = context.ReadValue<Vector2>();
 
+        LeftMouseHold.performed += context =>
+        {
+            VirtualInputManager.Instance.MouseLeftHold = true;
+        };
+        LeftMouseHold.canceled += context =>
+        {
+            VirtualInputManager.Instance.MouseLeftHold = false;
+        };
         //deltaRotation = Quaternion.identity;
         //rb = characterControl.transform.GetComponent<Rigidbody>();
     }
@@ -37,24 +51,36 @@ public class MouseInput : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        VirtualInputManager.Instance.MousePosition = rotateValue;//mouse.position.ReadValue();
-        if (Mouse.current.leftButton.isPressed)
+        //Debug.Log("Click " + LeftMouseClick.triggered);
+        //Debug.Log("Hold " + LeftMouseHold.triggered);
+        VirtualInputManager.Instance.MousePosition = MousePosition;//mouse.position.ReadValue();
+        if (LeftMouseClick.triggered) //Mouse.current.leftButton.wasPressedThisFrame
         {
-            Ray ray = Camera.main.ScreenPointToRay(rotateValue);
+            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
             {
                 //Debug.Log(hit.point);
                 //VirtualInputManager.Instance.Attack = true;
                 VirtualInputManager.Instance.ClickPosition = hit.point;
-                VirtualInputManager.Instance.MouseClicked = true;
+                VirtualInputManager.Instance.MouseLeftClicked = true;
             }
         }
         else
         {
-            VirtualInputManager.Instance.MouseClicked = false;
-            //VirtualInputManager.Instance.MustMove = false;
+            VirtualInputManager.Instance.MouseLeftClicked = false;
         }
+
+        //if (LeftMouseHold.phase == InputActionPhase.Performed)
+        //{
+        //    VirtualInputManager.Instance.MouseLeftHold = true;
+        //}
+        
+        //if (LeftMouseHold.phase == InputActionPhase.Canceled)
+        //{
+        //    VirtualInputManager.Instance.MouseLeftHold = false;
+        //}
+        //Debug.Log("H " + VirtualInputManager.Instance.MouseLeftHold);
         //else
         //{
         //    VirtualInputManager.Instance.Attack = false;
@@ -100,6 +126,19 @@ public class MouseInput : MonoBehaviour
         ////Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 30, 0) * Time.deltaTime);
         //rb.MoveRotation(rb.rotation * deltaRotation);
     }
-    private void OnEnable() => inputMaster.Player.Enable();
-    private void OnDisable() => inputMaster.Player.Disable();
+    private void OnEnable()
+    {
+        inputMaster.Player.Enable();
+        LeftMouseClick.Enable();
+        LeftMouseHold.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputMaster.Player.Disable();
+        LeftMouseClick.Disable();
+        LeftMouseHold.Disable();
+    }
+
+    //private void OnDisable() => inputMaster.Player.Disable();
 }

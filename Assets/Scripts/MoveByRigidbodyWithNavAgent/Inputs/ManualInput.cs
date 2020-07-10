@@ -25,16 +25,25 @@ public class ManualInput : MonoBehaviour
         //    characterControl.MustMove = false;
         //}
 
-        if (VirtualInputManager.Instance.MouseClicked)
+        if (VirtualInputManager.Instance.MouseLeftClicked)
         {
-            characterControl.MouseClicked = true;
+            characterControl.MouseLeftClicked = true;
             characterControl.ClickPosition = VirtualInputManager.Instance.ClickPosition;
         }
         else
         {
-            characterControl.MouseClicked = false;
+            characterControl.MouseLeftClicked = false;
         }
-        
+
+        if (VirtualInputManager.Instance.MouseLeftHold)
+        {
+            characterControl.MouseLeftHold = true;
+        }
+        else
+        {
+            characterControl.MouseLeftHold = false;
+        }
+
         if (VirtualInputManager.Instance.PressedW)
         {
             characterControl.PressedW = true;

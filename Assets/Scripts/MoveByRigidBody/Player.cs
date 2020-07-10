@@ -52,9 +52,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         controls = new InputMaster();
-        controls.Player.ClickToMove.performed += context => contextClickToMove = context;
+        controls.Player.MouseClick.performed += context => contextClickToMove = context;
         controls.Player.Movement.performed += context => movementInput = context.ReadValue<Vector2>();
-        controls.Player.Turn.performed += context => turnInput = context.ReadValue<Vector2>();
+        controls.Player.MousePosition.performed += context => turnInput = context.ReadValue<Vector2>();
         controls.Player.Jump.performed += context => contextJump = context;//OnAttack(context); //isJump = context.ReadValue<float>();
         //controls.Player.Jump.performed += context => Jump(context.ReadValue<float>(), jumpForce, forceMode);
 
