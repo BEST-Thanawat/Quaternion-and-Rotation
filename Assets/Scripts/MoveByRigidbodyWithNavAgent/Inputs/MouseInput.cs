@@ -85,15 +85,15 @@ public class MouseInput : MonoBehaviour
             }
         }
 
-        if (LeftMouseHold.phase == InputActionPhase.Performed)
-        {
-            VirtualInputManager.Instance.MouseLeftHold = true;
-        }
+        //if (LeftMouseHold.phase == InputActionPhase.Performed)
+        //{
+        //    VirtualInputManager.Instance.MouseLeftHold = true;
+        //}
 
-        if (LeftMouseHold.phase == InputActionPhase.Canceled)
-        {
-            VirtualInputManager.Instance.MouseLeftHold = false;
-        }
+        //if (LeftMouseHold.phase == InputActionPhase.Canceled)
+        //{
+        //    VirtualInputManager.Instance.MouseLeftHold = false;
+        //}
 
         //Debug.Log("H " + VirtualInputManager.Instance.MouseLeftHold);
         //else
@@ -123,12 +123,12 @@ public class MouseInput : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            VirtualInputManager.Instance.MousePositionVector3 = hit.point;
-        }
+        //Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        //RaycastHit hit;
+        //if (Physics.Raycast(ray, out hit))
+        //{
+        //    VirtualInputManager.Instance.MousePositionVector3 = hit.point;
+        //}
 
         //Ray ray = Camera.main.ScreenPointToRay(characterControl.RotateValue);
 

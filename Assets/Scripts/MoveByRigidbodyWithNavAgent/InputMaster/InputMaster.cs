@@ -139,6 +139,17 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""action"": ""MouseClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a800b4f3-9aed-4380-a617-fe828082a1ec"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Press,Hold"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and mouse"",
+                    ""action"": ""MouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }

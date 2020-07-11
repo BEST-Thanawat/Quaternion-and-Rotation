@@ -119,7 +119,6 @@ public class CharacterControl : MonoBehaviour
     private void Awake()
     {
         seeker = GetComponent<Seeker>();
-        // OnPathComplete will be called every time a path is returned to this seeker
         seeker.pathCallback += OnPathComplete;
 
         //SetRagdollParts();
@@ -130,6 +129,7 @@ public class CharacterControl : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log(MouseLeftClicked);
         ClickToMoveUpdate();
         HoldToMoveUpdate();
     }
@@ -146,11 +146,7 @@ public class CharacterControl : MonoBehaviour
         }
 
         ClickToMoveFixedUpdate();
-
-        if (!isMoving)
-        {
-            FaceToMouse();
-        }
+        FaceToMouse();
     }
 
     public List<TriggerDetector> GetAllTrigger()
@@ -361,7 +357,7 @@ public class CharacterControl : MonoBehaviour
     }
     private void FaceToMouse()
     {
-        if (transform.GetComponent<ManualInput>().enabled)
+        if (transform.GetComponent<ManualInput>().enabled && !isMoving)
         {
             Vector3 relativeDirection = Vector3.zero;
 
@@ -430,10 +426,6 @@ public class CharacterControl : MonoBehaviour
         //We also received velocity from RigidMover as well to improve the mevement.
         transform.position = CharacterAnimator.rootPosition;
         transform.rotation = CharacterAnimator.rootRotation;
-
-
-
-        // * CharacterAnimator.speed;
 
         //if (Time.deltaTime > 0)
         //{
