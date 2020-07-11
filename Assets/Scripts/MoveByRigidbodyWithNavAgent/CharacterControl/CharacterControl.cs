@@ -62,7 +62,7 @@ public class CharacterControl : MonoBehaviour
     public bool Attack;
 
     [Header("Face To Mouse")]
-    public Vector2 MousePosition; //For face to mouse function
+    //public Vector2 MousePositionVector2; //For face to mouse function
     public Vector3 MousePositionVector3;
     public float RotateSpeedFaceToMouse = 5f;
     //public float MovingTurnSpeed = 360;

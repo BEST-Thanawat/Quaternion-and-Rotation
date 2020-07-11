@@ -13,7 +13,7 @@ public class ManualInput : MonoBehaviour
     private void Update()
     {
         characterControl.KeyboardPressedValue = VirtualInputManager.Instance.KeyboardPressedValue;
-        characterControl.MousePosition = VirtualInputManager.Instance.MousePositionVector2;
+        //characterControl.MousePositionVector2 = VirtualInputManager.Instance.MousePositionVector2;
         characterControl.MousePositionVector3 = VirtualInputManager.Instance.MousePositionVector3;
         characterControl.Velocity = VirtualInputManager.Instance.Velocity;
 

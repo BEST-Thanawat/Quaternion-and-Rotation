@@ -12,7 +12,7 @@ public class VirtualInputManager : Singleton<VirtualInputManager>
     public bool PressedD;
     public bool PressedC;
     public bool PressedLShift;
-    public Vector2 MousePositionVector2;
+    //public Vector2 MousePositionVector2;
     public Vector3 MousePositionVector3;
     public Vector2 KeyboardPressedValue;
     //public Vector2 RotateValue;

@@ -56,7 +56,7 @@ public class MouseInput : MonoBehaviour
     {
         //Debug.Log("Click " + LeftMouseClick.triggered);
         //Debug.Log("Hold " + LeftMouseHold.triggered);
-        VirtualInputManager.Instance.MousePositionVector2 = MousePosition;//mouse.position.ReadValue();
+        //VirtualInputManager.Instance.MousePositionVector2 = MousePosition;//mouse.position.ReadValue();
 
         Ray ray = Camera.main.ScreenPointToRay(MousePosition);
         RaycastHit hit;
