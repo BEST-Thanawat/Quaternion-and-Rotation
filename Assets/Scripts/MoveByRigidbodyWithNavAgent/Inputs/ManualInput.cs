@@ -17,15 +17,6 @@ public class ManualInput : MonoBehaviour
         characterControl.MousePositionVector3 = VirtualInputManager.Instance.MousePositionVector3;
         characterControl.Velocity = VirtualInputManager.Instance.Velocity;
 
-        //if (VirtualInputManager.Instance.MustMove)
-        //{
-        //    characterControl.MustMove = true;
-        //}
-        //else
-        //{
-        //    characterControl.MustMove = false;
-        //}
-
         if (VirtualInputManager.Instance.MouseLeftClicked)
         {
             characterControl.MouseLeftClicked = true;
@@ -43,6 +34,25 @@ public class ManualInput : MonoBehaviour
         else
         {
             characterControl.MouseLeftHold = false;
+        }
+
+        if (VirtualInputManager.Instance.MouseRightClicked)
+        {
+            characterControl.MouseRightClicked = true;
+            characterControl.ClickPosition = VirtualInputManager.Instance.ClickPosition;
+        }
+        else
+        {
+            characterControl.MouseRightClicked = false;
+        }
+
+        if (VirtualInputManager.Instance.MouseRightHold)
+        {
+            characterControl.MouseRightHold = true;
+        }
+        else
+        {
+            characterControl.MouseRightHold = false;
         }
 
         if (VirtualInputManager.Instance.PressedW)
@@ -111,12 +121,10 @@ public class ManualInput : MonoBehaviour
         if (VirtualInputManager.Instance.Attack)
         {
             characterControl.Attack = true;
-            //characterControl.ClickPosition = VirtualInputManager.Instance.ClickPosition;
         }
         else
         {
             characterControl.Attack = false;
-            //characterControl.ClickPosition = Vector3.zero;
         }
     }
 }

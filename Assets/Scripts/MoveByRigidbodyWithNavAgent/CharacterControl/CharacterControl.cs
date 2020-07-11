@@ -72,6 +72,8 @@ public class CharacterControl : MonoBehaviour
     [Header("Click to Move")]
     public bool MouseLeftClicked;
     public bool MouseLeftHold;
+    public bool MouseRightClicked;
+    public bool MouseRightHold;
     public Vector3 ClickPosition; //Is hit.point
     public float StoppingDistance = 0.1f;
     [SerializeField] private float remainingDistance = 0;
@@ -88,8 +90,8 @@ public class CharacterControl : MonoBehaviour
     //private float speed = 4.5f;
     private bool isMoving = false;
 
-    private bool triggerLeftClicked = false;
-    private bool triggerLeftHold = false;
+    private bool triggerRightClicked = false;
+    private bool triggerRightHold = false;
     private Vector3 relativePosition;
     private Quaternion targetRotation = Quaternion.identity;
     private float rotationTime;
@@ -131,7 +133,6 @@ public class CharacterControl : MonoBehaviour
         ClickToMoveUpdate();
         HoldToMoveUpdate();
     }
-
     private void FixedUpdate()
     {
         if (RIGID_BODY.velocity.y < 0f)
@@ -185,7 +186,265 @@ public class CharacterControl : MonoBehaviour
             }
         }
     }
+    
+    public static Vector3 ExtractDotVector(Vector3 _vector, Vector3 _direction)
+    {
+        //Normalize vector if necessary;
+        if (_direction.sqrMagnitude != 1)
+            _direction.Normalize();
 
+        float _amount = Vector3.Dot(_vector, _direction);
+
+        return _direction * _amount;
+    }
+
+    public void OnDisable()
+    {
+        seeker.pathCallback -= OnPathComplete;
+    }
+    public void OnPathComplete(Path p)
+    {
+        if (!p.error)
+        {
+            path = p;
+            currentWaypoint = 0;
+        }
+        else
+        {
+            Debug.LogError(p.errorLog);
+        }
+    }
+
+    public void CreateMiddleSpheres(GameObject start, Vector3 direction, float sec, int interations, List<GameObject> spheresLlst)
+    {
+        for (int i = 0; i < interations; i++)
+        {
+            Vector3 pos = start.transform.position + (direction * sec * (i + 1));
+            GameObject newObj = CreateEdgeSphere(pos);
+            newObj.transform.parent = this.transform;
+            spheresLlst.Add(newObj);
+        }
+    }
+
+    private void ClickToMoveUpdate()
+    {
+        if (MouseRightClicked)
+        {
+            triggerRightClicked = true;
+            path = null;
+            seeker.StartPath(RIGID_BODY.position, ClickPosition);
+
+            rotationTime = 0;
+        }
+    }
+    private void HoldToMoveUpdate()
+    {
+        if (MouseRightHold)
+        {
+            triggerRightHold = true;
+            triggerRightClicked = false;
+            path = null;
+
+            rotationTime = 0;
+        }
+        else
+        {
+            triggerRightHold = false;
+        }
+    }
+    private void ClickToMoveFixedUpdate()
+    {
+        if (triggerRightHold && path == null)
+        {
+            isMoving = true;
+            path = null;
+
+            Vector3 relativeDirection = Vector3.zero;
+            relativePosition = MousePositionVector3 - RIGID_BODY.position;
+            relativePosition.y = 0f;
+
+            targetRotation = Quaternion.LookRotation(relativePosition);
+            rotationTime += Time.fixedDeltaTime * RotateSpeed;
+            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+        }
+
+        if (triggerRightClicked && path != null)
+        {
+            isMoving = true;
+
+            //Debug.Log(currentWaypoint);
+            relativePosition = path.vectorPath[currentWaypoint] - RIGID_BODY.position;
+            relativePosition.y = 0f;
+            if(relativePosition != Vector3.zero)
+            {
+                targetRotation = Quaternion.LookRotation(relativePosition);
+            }
+            rotationTime += Time.fixedDeltaTime * RotateSpeed;
+            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+            remainingDistance = Vector3.Distance(RIGID_BODY.position, path.vectorPath[currentWaypoint]);
+            
+            if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+            {
+                if (currentWaypoint + 1 < path.vectorPath.Count)
+                {
+                    currentWaypoint++;
+                    rotationTime = 0;
+                }
+                else
+                {
+                    triggerRightClicked = false;
+                }
+            }
+            else
+            {
+                IsArrived = false;
+            }
+        }
+
+        if (!triggerRightHold && !triggerRightClicked)
+        {
+            IsArrived = true;
+            isMoving = false;
+        }
+
+        ////if (trigggerClickToMove)
+        ////{
+        ////    isMoving = true;
+
+        ////    //Rigidbody rotation way 1
+        ////    relativePosition = ClickPosition - RIGID_BODY.position;
+        ////    relativePosition.y = 0f;
+        ////    targetRotation = Quaternion.LookRotation(relativePosition);
+        ////    rotationTime += Time.fixedDeltaTime * RotateSpeed;
+        ////    RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+        ////    ////Rigidbody rotation way 2
+        ////    //float angle = Mathf.Atan2(transform.InverseTransformPoint(ClickPosition).x, transform.InverseTransformPoint(ClickPosition).z) * Mathf.Rad2Deg;
+        ////    //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
+        ////    //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
+        ////    //RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
+
+        ////    remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+        ////    if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+        ////    {
+        ////        trigggerClickToMove = false;
+        ////        IsArrived = true;
+
+        ////        StartCoroutine(SetIsMovingToFalse(0.4f));
+        ////    }
+        ////    else
+        ////    {
+        ////        IsArrived = false;
+        ////    }
+        ////}
+
+        //if (trigggerClickToMove)
+        //{
+        //    isMoving = true;
+        //    rotationTime += Time.deltaTime * RotateSpeed;
+        //    RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
+
+        //    remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
+        //    if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+        //    {
+        //        trigggerClickToMove = false;
+        //        IsArrived = true;
+
+        //        StartCoroutine(SetIsMovindToFalse(0.4f));
+        //    }
+        //    else
+        //    {
+        //        IsArrived = false;
+        //    }
+        //}
+    }
+    private void FaceToMouse()
+    {
+        if (transform.GetComponent<ManualInput>().enabled)
+        {
+            Vector3 relativeDirection = Vector3.zero;
+
+            relativeDirection = MousePositionVector3 - RIGID_BODY.position;
+            relativeDirection.y = 0;
+            rotationTimeFaceToMouse = 0;
+
+            rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
+            if (relativeDirection != Vector3.zero)
+            {
+                RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
+            }
+        }
+
+        //if (transform.GetComponent<ManualInput>().enabled)
+        //{
+        //    //*** Rotate character by mouse position.
+        //    Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        //    RaycastHit hit;
+        //    Vector3 relativeDirection = Vector3.zero;
+
+        //    if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
+        //    {
+        //        relativeDirection = hit.point - RIGID_BODY.position;
+        //        relativeDirection.y = 0;
+        //        rotationTimeFaceToMouse = 0;
+        //    }
+
+        //    rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
+        //    if (relativeDirection != Vector3.zero)
+        //    {
+        //        RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
+        //    }
+        //}
+
+        //if (this.transform.GetComponent<ManualInput>().enabled)
+        //{
+        //    //*** Rotate character by mouse position.
+        //    Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(ray, out hit, 100f))
+        //    {
+        //        Vector3 move = this.transform.InverseTransformPoint(hit.point);
+        //        float m_TurnAmount = Mathf.Atan2(move.x, move.z);
+        //        ForwardAmount = move.z;
+        //        float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
+        //        deltaRotation = Quaternion.Euler(0, m_TurnAmount * turnSpeed * Time.fixedDeltaTime, 0);
+        //    }
+        //    else
+        //    {
+        //        deltaRotation = Quaternion.identity;
+        //    }
+
+        //    //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 30, 0) * Time.deltaTime);
+        //    RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
+        //}
+    }
+    private GameObject CreateEdgeSphere(Vector3 position)
+    {
+        GameObject obj = Instantiate(ColliderEdgePrefab, position, Quaternion.identity);
+        return obj;
+    }
+    private void OnAnimatorMove()
+    {
+        //Default root motion
+        //We also received velocity from RigidMover as well to improve the mevement.
+        transform.position = CharacterAnimator.rootPosition;
+        transform.rotation = CharacterAnimator.rootRotation;
+
+
+
+        // * CharacterAnimator.speed;
+
+        //if (Time.deltaTime > 0)
+        //{
+        //    Vector3 v = (CharacterAnimator.deltaPosition * 1f) / Time.fixedDeltaTime;
+        //    v.y = RIGID_BODY.velocity.y;
+        //    RIGID_BODY.velocity = v.normalized + currentGroundAdjustmentVelocity;
+
+        //    //// we preserve the existing y part of the current velocity.
+        //    //RIGID_BODY.velocity = Velocity + currentGroundAdjustmentVelocity;
+        //}
+    }
     private void SetColliderSpheres()
     {
         CapsuleCollider capsule = GetComponent<CapsuleCollider>();
@@ -279,286 +538,6 @@ public class CharacterControl : MonoBehaviour
         CreateMiddleSpheres(bottomLeft, this.transform.up, verSec, 2, LeftSpheres);
         CreateMiddleSpheres(bottomRight, this.transform.up, verSec, 2, RightSpheres);
     }
-
-    
-    
-    public static Vector3 ExtractDotVector(Vector3 _vector, Vector3 _direction)
-    {
-        //Normalize vector if necessary;
-        if (_direction.sqrMagnitude != 1)
-            _direction.Normalize();
-
-        float _amount = Vector3.Dot(_vector, _direction);
-
-        return _direction * _amount;
-    }
-
-    private void ClickToMoveUpdate()
-    {
-        if (MouseLeftClicked)
-        {
-            triggerLeftClicked = true;
-            path = null;
-            seeker.StartPath(RIGID_BODY.position, ClickPosition);
-
-            rotationTime = 0;
-        }
-    }
-    private void HoldToMoveUpdate()
-    {
-        if (MouseLeftHold)
-        {
-            triggerLeftHold = true;
-            triggerLeftClicked = false;
-            path = null;
-
-            rotationTime = 0;
-        }
-        else
-        {
-            triggerLeftHold = false;
-        }
-    }
-    public void OnDisable()
-    {
-        seeker.pathCallback -= OnPathComplete;
-    }
-    public void OnPathComplete(Path p)
-    {
-        //Debug.Log("OnPathComplete");
-        // We got our path back
-        if (!p.error)
-        {
-            path = p;
-            currentWaypoint = 0;
-        }
-        else
-        {
-            Debug.LogError(p.errorLog);
-        }
-    }
-
-    private void ClickToMoveFixedUpdate()
-    {
-        if (triggerLeftHold && path == null)
-        {
-            isMoving = true;
-            path = null;
-
-            Vector3 relativeDirection = Vector3.zero;
-            relativePosition = MousePositionVector3 - RIGID_BODY.position;
-            relativePosition.y = 0f;
-
-            targetRotation = Quaternion.LookRotation(relativePosition);
-            rotationTime += Time.fixedDeltaTime * RotateSpeed;
-            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
-        }
-
-        if (triggerLeftClicked && path != null)
-        {
-            isMoving = true;
-
-            //Debug.Log(currentWaypoint);
-            relativePosition = path.vectorPath[currentWaypoint] - RIGID_BODY.position;
-            relativePosition.y = 0f;
-            if(relativePosition != Vector3.zero)
-            {
-                targetRotation = Quaternion.LookRotation(relativePosition);
-            }
-            rotationTime += Time.fixedDeltaTime * RotateSpeed;
-            RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
-
-            remainingDistance = Vector3.Distance(RIGID_BODY.position, path.vectorPath[currentWaypoint]);
-            
-            if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
-            {
-                if (currentWaypoint + 1 < path.vectorPath.Count)
-                {
-                    currentWaypoint++;
-                    rotationTime = 0;
-                }
-                else
-                {
-                    triggerLeftClicked = false;
-                }
-            }
-            else
-            {
-                IsArrived = false;
-            }
-        }
-
-        if (!triggerLeftHold && !triggerLeftClicked)
-        {
-            IsArrived = true;
-            isMoving = false;
-        }
-
-        ////if (trigggerClickToMove)
-        ////{
-        ////    isMoving = true;
-
-        ////    //Rigidbody rotation way 1
-        ////    relativePosition = ClickPosition - RIGID_BODY.position;
-        ////    relativePosition.y = 0f;
-        ////    targetRotation = Quaternion.LookRotation(relativePosition);
-        ////    rotationTime += Time.fixedDeltaTime * RotateSpeed;
-        ////    RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
-
-        ////    ////Rigidbody rotation way 2
-        ////    //float angle = Mathf.Atan2(transform.InverseTransformPoint(ClickPosition).x, transform.InverseTransformPoint(ClickPosition).z) * Mathf.Rad2Deg;
-        ////    //Vector3 eulerAngleVelocity = new Vector3(0, angle, 0);
-        ////    //Quaternion deltaRotation = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime);
-        ////    //RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
-
-        ////    remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
-        ////    if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
-        ////    {
-        ////        trigggerClickToMove = false;
-        ////        IsArrived = true;
-
-        ////        StartCoroutine(SetIsMovingToFalse(0.4f));
-        ////    }
-        ////    else
-        ////    {
-        ////        IsArrived = false;
-        ////    }
-        ////}
-
-        //if (trigggerClickToMove)
-        //{
-        //    isMoving = true;
-        //    rotationTime += Time.deltaTime * RotateSpeed;
-        //    RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
-
-        //    remainingDistance = Vector3.Distance(RIGID_BODY.position, ClickPosition);
-        //    if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
-        //    {
-        //        trigggerClickToMove = false;
-        //        IsArrived = true;
-
-        //        StartCoroutine(SetIsMovindToFalse(0.4f));
-        //    }
-        //    else
-        //    {
-        //        IsArrived = false;
-        //    }
-        //}
-    }
-
-    private void FaceToMouse()
-    {
-        if (transform.GetComponent<ManualInput>().enabled)
-        {
-            Vector3 relativeDirection = Vector3.zero;
-
-            relativeDirection = MousePositionVector3 - RIGID_BODY.position;
-            relativeDirection.y = 0;
-            rotationTimeFaceToMouse = 0;
-
-            rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
-            if (relativeDirection != Vector3.zero)
-            {
-                RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
-            }
-        }
-
-        //if (transform.GetComponent<ManualInput>().enabled)
-        //{
-        //    //*** Rotate character by mouse position.
-        //    Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-        //    RaycastHit hit;
-        //    Vector3 relativeDirection = Vector3.zero;
-
-        //    if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
-        //    {
-        //        relativeDirection = hit.point - RIGID_BODY.position;
-        //        relativeDirection.y = 0;
-        //        rotationTimeFaceToMouse = 0;
-        //    }
-
-        //    rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
-        //    if (relativeDirection != Vector3.zero)
-        //    {
-        //        RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
-        //    }
-        //}
-
-        //if (this.transform.GetComponent<ManualInput>().enabled)
-        //{
-        //    //*** Rotate character by mouse position.
-        //    Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-        //    RaycastHit hit;
-        //    if (Physics.Raycast(ray, out hit, 100f))
-        //    {
-        //        Vector3 move = this.transform.InverseTransformPoint(hit.point);
-        //        float m_TurnAmount = Mathf.Atan2(move.x, move.z);
-        //        ForwardAmount = move.z;
-        //        float turnSpeed = Mathf.Lerp(StationaryTurnSpeed, MovingTurnSpeed, ForwardAmount);
-        //        deltaRotation = Quaternion.Euler(0, m_TurnAmount * turnSpeed * Time.fixedDeltaTime, 0);
-        //    }
-        //    else
-        //    {
-        //        deltaRotation = Quaternion.identity;
-        //    }
-
-        //    //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 30, 0) * Time.deltaTime);
-        //    RIGID_BODY.MoveRotation(RIGID_BODY.rotation * deltaRotation);
-        //}
-    }
-
-    public void CreateMiddleSpheres(GameObject start, Vector3 direction, float sec, int interations, List<GameObject> spheresLlst)
-    {
-        for (int i = 0; i < interations; i++)
-        {
-            Vector3 pos = start.transform.position + (direction * sec * (i + 1));
-            GameObject newObj = CreateEdgeSphere(pos);
-            newObj.transform.parent = this.transform;
-            spheresLlst.Add(newObj);
-        }
-    }
-    private GameObject CreateEdgeSphere(Vector3 position)
-    {
-        GameObject obj = Instantiate(ColliderEdgePrefab, position, Quaternion.identity);
-        return obj;
-    }
-
-    IEnumerator SetIsMovingToFalse(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        isMoving = false;
-        path = null;
-    }
-
-    private void OnAnimatorMove()
-    {
-        //Default root motion
-        //We also received velocity from RigidMover as well to improve the mevement.
-        transform.position = CharacterAnimator.rootPosition;
-        transform.rotation = CharacterAnimator.rootRotation;
-
-
-
-        // * CharacterAnimator.speed;
-
-        //if (Time.deltaTime > 0)
-        //{
-        //    Vector3 v = (CharacterAnimator.deltaPosition * 1f) / Time.fixedDeltaTime;
-        //    v.y = RIGID_BODY.velocity.y;
-        //    RIGID_BODY.velocity = v.normalized + currentGroundAdjustmentVelocity;
-
-        //    //// we preserve the existing y part of the current velocity.
-        //    //RIGID_BODY.velocity = Velocity + currentGroundAdjustmentVelocity;
-        //}
-    }
-
-    //IEnumerator Start()
-    //{
-    //    yield return new WaitForSeconds(5f);
-    //    RIGID_BODY.AddForce(400f * Vector3.up);
-    //    yield return new WaitForSeconds(0.5f);
-    //    TurnOnRagdoll();
-    //}
     private void TurnOnRagdoll()
     {
         RIGID_BODY.useGravity = false;
@@ -572,6 +551,12 @@ public class CharacterControl : MonoBehaviour
             c.isTrigger = false;
             c.attachedRigidbody.velocity = Vector3.zero;
         }
+    }
+    IEnumerator SetIsMovingToFalse(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        isMoving = false;
+        path = null;
     }
 
     //private void OnAnimatorMove()

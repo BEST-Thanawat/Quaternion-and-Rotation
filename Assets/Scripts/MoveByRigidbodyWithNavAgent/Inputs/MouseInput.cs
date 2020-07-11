@@ -15,9 +15,10 @@ public class MouseInput : MonoBehaviour
     private InputMaster inputMaster;
     //private InputAction.CallbackContext MouseClick;
     private Vector2 MousePosition;
-    private Vector3 MousrPositionVector3;
     private InputAction LeftMouseClick;
     private InputAction LeftMouseHold;
+    private InputAction RightMouseClick;
+    private InputAction RightMouseHold;
     //private Quaternion deltaRotation;
     //private Rigidbody rb;
     private void Awake()
@@ -31,17 +32,14 @@ public class MouseInput : MonoBehaviour
 
         LeftMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "press");
         LeftMouseHold = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "hold(duration=0.8)");
-       
-        
+        RightMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/rightButton", interactions: "press");
+        RightMouseHold = new InputAction(type: InputActionType.Button, binding: "<Mouse>/rightButton", interactions: "hold(duration=0.8)");
 
-        LeftMouseHold.performed += context =>
-        {
-            VirtualInputManager.Instance.MouseLeftHold = true;
-        };
-        LeftMouseHold.canceled += context =>
-        {
-            VirtualInputManager.Instance.MouseLeftHold = false;
-        };
+        LeftMouseHold.performed += context => VirtualInputManager.Instance.MouseLeftHold = true;
+        LeftMouseHold.canceled += context => VirtualInputManager.Instance.MouseLeftHold = false;
+        RightMouseHold.performed += context => VirtualInputManager.Instance.MouseRightHold = true;
+        RightMouseHold.canceled += context => VirtualInputManager.Instance.MouseRightHold = false;
+
         //deltaRotation = Quaternion.identity;
         //rb = characterControl.transform.GetComponent<Rigidbody>();
     }
@@ -66,13 +64,24 @@ public class MouseInput : MonoBehaviour
             if (LeftMouseClick.triggered) //Mouse.current.leftButton.wasPressedThisFrame
             {
                 //Debug.Log(hit.point);
-                //VirtualInputManager.Instance.Attack = true;
+                VirtualInputManager.Instance.Attack = true;
                 VirtualInputManager.Instance.ClickPosition = hit.point;
                 VirtualInputManager.Instance.MouseLeftClicked = true;
             }
             else
             {
+                VirtualInputManager.Instance.Attack = false;
                 VirtualInputManager.Instance.MouseLeftClicked = false;
+            }
+
+            if (RightMouseClick.triggered)
+            {
+                VirtualInputManager.Instance.ClickPosition = hit.point;
+                VirtualInputManager.Instance.MouseRightClicked = true;
+            }
+            else
+            {
+                VirtualInputManager.Instance.MouseRightClicked = false;
             }
         }
 
@@ -85,6 +94,7 @@ public class MouseInput : MonoBehaviour
         {
             VirtualInputManager.Instance.MouseLeftHold = false;
         }
+
         //Debug.Log("H " + VirtualInputManager.Instance.MouseLeftHold);
         //else
         //{
@@ -143,6 +153,8 @@ public class MouseInput : MonoBehaviour
         inputMaster.Player.Enable();
         LeftMouseClick.Enable();
         LeftMouseHold.Enable();
+        RightMouseClick.Enable();
+        RightMouseHold.Enable();
     }
 
     private void OnDisable()
@@ -150,6 +162,8 @@ public class MouseInput : MonoBehaviour
         inputMaster.Player.Disable();
         LeftMouseClick.Disable();
         LeftMouseHold.Disable();
+        RightMouseClick.Disable();
+        RightMouseHold.Disable();
     }
 
     //private void OnDisable() => inputMaster.Player.Disable();
