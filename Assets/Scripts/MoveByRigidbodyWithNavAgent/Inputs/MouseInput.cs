@@ -13,9 +13,9 @@ public class MouseInput : MonoBehaviour
 
     //private Mouse mouse;
     private InputMaster inputMaster;
-    //private InputAction.CallbackContext contextClickToMove;
+    //private InputAction.CallbackContext MouseClick;
     private Vector2 MousePosition;
-
+    private Vector3 MousrPositionVector3;
     private InputAction LeftMouseClick;
     private InputAction LeftMouseHold;
     //private Quaternion deltaRotation;
@@ -26,10 +26,13 @@ public class MouseInput : MonoBehaviour
         //mouse = InputSystem.GetDevice<Mouse>();
 
         inputMaster = new InputMaster();
+        inputMaster.Player.MousePosition.performed += context => MousePosition = context.ReadValue<Vector2>();
+        //inputMaster.Player.MouseClick.performed += context => OnClicked(context);
+
         LeftMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "press");
         LeftMouseHold = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "hold(duration=0.8)");
        
-        inputMaster.Player.MousePosition.performed += context => MousePosition = context.ReadValue<Vector2>();
+        
 
         LeftMouseHold.performed += context =>
         {
@@ -42,7 +45,7 @@ public class MouseInput : MonoBehaviour
         //deltaRotation = Quaternion.identity;
         //rb = characterControl.transform.GetComponent<Rigidbody>();
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         
@@ -53,33 +56,35 @@ public class MouseInput : MonoBehaviour
     {
         //Debug.Log("Click " + LeftMouseClick.triggered);
         //Debug.Log("Hold " + LeftMouseHold.triggered);
-        VirtualInputManager.Instance.MousePosition = MousePosition;//mouse.position.ReadValue();
-        if (LeftMouseClick.triggered) //Mouse.current.leftButton.wasPressedThisFrame
+        VirtualInputManager.Instance.MousePositionVector2 = MousePosition;//mouse.position.ReadValue();
+
+        Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
         {
-            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
+            VirtualInputManager.Instance.MousePositionVector3 = hit.point;
+            if (LeftMouseClick.triggered) //Mouse.current.leftButton.wasPressedThisFrame
             {
                 //Debug.Log(hit.point);
                 //VirtualInputManager.Instance.Attack = true;
                 VirtualInputManager.Instance.ClickPosition = hit.point;
                 VirtualInputManager.Instance.MouseLeftClicked = true;
             }
-        }
-        else
-        {
-            VirtualInputManager.Instance.MouseLeftClicked = false;
+            else
+            {
+                VirtualInputManager.Instance.MouseLeftClicked = false;
+            }
         }
 
-        //if (LeftMouseHold.phase == InputActionPhase.Performed)
-        //{
-        //    VirtualInputManager.Instance.MouseLeftHold = true;
-        //}
-        
-        //if (LeftMouseHold.phase == InputActionPhase.Canceled)
-        //{
-        //    VirtualInputManager.Instance.MouseLeftHold = false;
-        //}
+        if (LeftMouseHold.phase == InputActionPhase.Performed)
+        {
+            VirtualInputManager.Instance.MouseLeftHold = true;
+        }
+
+        if (LeftMouseHold.phase == InputActionPhase.Canceled)
+        {
+            VirtualInputManager.Instance.MouseLeftHold = false;
+        }
         //Debug.Log("H " + VirtualInputManager.Instance.MouseLeftHold);
         //else
         //{
@@ -108,6 +113,13 @@ public class MouseInput : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            VirtualInputManager.Instance.MousePositionVector3 = hit.point;
+        }
+
         //Ray ray = Camera.main.ScreenPointToRay(characterControl.RotateValue);
 
         //RaycastHit hit;

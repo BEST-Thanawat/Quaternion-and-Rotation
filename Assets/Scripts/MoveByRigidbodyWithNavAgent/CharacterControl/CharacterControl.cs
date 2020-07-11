@@ -63,6 +63,7 @@ public class CharacterControl : MonoBehaviour
 
     [Header("Face To Mouse")]
     public Vector2 MousePosition; //For face to mouse function
+    public Vector3 MousePositionVector3;
     public float RotateSpeedFaceToMouse = 5f;
     //public float MovingTurnSpeed = 360;
     //public float StationaryTurnSpeed = 180;
@@ -97,12 +98,9 @@ public class CharacterControl : MonoBehaviour
     private Rigidbody rigid;
     private List<TriggerDetector> TriggerDetectors = new List<TriggerDetector>();
 
-    private AIDestinationSetter aiDestinationSetter;
     private Seeker seeker;
     private Path path;
-    private float nextWaypointDistance = 3;
     private int currentWaypoint = 0;
-    private bool reachedEndOfPath;
 
     public Rigidbody RIGID_BODY
     {
@@ -118,7 +116,6 @@ public class CharacterControl : MonoBehaviour
 
     private void Awake()
     {
-        aiDestinationSetter = GetComponent<AIDestinationSetter>();
         seeker = GetComponent<Seeker>();
         // OnPathComplete will be called every time a path is returned to this seeker
         seeker.pathCallback += OnPathComplete;
@@ -345,19 +342,12 @@ public class CharacterControl : MonoBehaviour
     {
         if (triggerLeftHold && path == null)
         {
-            Debug.Log(22);
             isMoving = true;
-
             path = null;
-            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-            RaycastHit hit;
-            Vector3 relativeDirection = Vector3.zero;
 
-            if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
-            {
-                relativePosition = hit.point - RIGID_BODY.position;
-                relativePosition.y = 0f;
-            }
+            Vector3 relativeDirection = Vector3.zero;
+            relativePosition = MousePositionVector3 - RIGID_BODY.position;
+            relativePosition.y = 0f;
 
             targetRotation = Quaternion.LookRotation(relativePosition);
             rotationTime += Time.fixedDeltaTime * RotateSpeed;
@@ -366,7 +356,6 @@ public class CharacterControl : MonoBehaviour
 
         if (triggerLeftClicked && path != null)
         {
-            Debug.Log(11);
             isMoving = true;
 
             //Debug.Log(currentWaypoint);
@@ -461,17 +450,11 @@ public class CharacterControl : MonoBehaviour
     {
         if (transform.GetComponent<ManualInput>().enabled)
         {
-            //*** Rotate character by mouse position.
-            Ray ray = Camera.main.ScreenPointToRay(MousePosition);
-            RaycastHit hit;
             Vector3 relativeDirection = Vector3.zero;
 
-            if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
-            {
-                relativeDirection = hit.point - RIGID_BODY.position;
-                relativeDirection.y = 0;
-                rotationTimeFaceToMouse = 0;
-            }
+            relativeDirection = MousePositionVector3 - RIGID_BODY.position;
+            relativeDirection.y = 0;
+            rotationTimeFaceToMouse = 0;
 
             rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
             if (relativeDirection != Vector3.zero)
@@ -479,6 +462,27 @@ public class CharacterControl : MonoBehaviour
                 RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
             }
         }
+
+        //if (transform.GetComponent<ManualInput>().enabled)
+        //{
+        //    //*** Rotate character by mouse position.
+        //    Ray ray = Camera.main.ScreenPointToRay(MousePosition);
+        //    RaycastHit hit;
+        //    Vector3 relativeDirection = Vector3.zero;
+
+        //    if (Physics.Raycast(ray, out hit, 100f, LayerMask.GetMask("Ground")))
+        //    {
+        //        relativeDirection = hit.point - RIGID_BODY.position;
+        //        relativeDirection.y = 0;
+        //        rotationTimeFaceToMouse = 0;
+        //    }
+
+        //    rotationTimeFaceToMouse += Time.deltaTime * RotateSpeedFaceToMouse;
+        //    if (relativeDirection != Vector3.zero)
+        //    {
+        //        RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, Quaternion.LookRotation(relativeDirection), rotationTimeFaceToMouse));
+        //    }
+        //}
 
         //if (this.transform.GetComponent<ManualInput>().enabled)
         //{
