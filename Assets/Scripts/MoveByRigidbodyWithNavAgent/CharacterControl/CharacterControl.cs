@@ -281,8 +281,9 @@ public class CharacterControl : MonoBehaviour
             RIGID_BODY.MoveRotation(Quaternion.Lerp(RIGID_BODY.rotation, targetRotation, rotationTime));
 
             remainingDistance = Vector3.Distance(RIGID_BODY.position, path.vectorPath[currentWaypoint]);
-            
-            if (!(remainingDistance > StoppingDistance) || (remainingDistance < StoppingDistance))
+
+            float remainDistance = float.Parse(remainingDistance.ToString("F1"));
+            if (!(remainDistance > StoppingDistance) || (remainDistance < StoppingDistance))
             {
                 if (currentWaypoint + 1 < path.vectorPath.Count)
                 {
