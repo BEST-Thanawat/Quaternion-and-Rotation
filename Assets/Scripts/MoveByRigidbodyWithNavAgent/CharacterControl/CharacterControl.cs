@@ -26,7 +26,8 @@ public enum TransitionParameter
 }
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(RigidMover))]
-[RequireComponent(typeof(ManualInput), typeof(DamageDetector))]
+[RequireComponent(typeof(ManualInput), typeof(DamageDetector), typeof(Seeker))]
+[RequireComponent(typeof(Funnel))]
 public class CharacterControl : MonoBehaviour
 {
     public Animator CharacterAnimator;
