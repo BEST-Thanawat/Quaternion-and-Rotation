@@ -67,7 +67,8 @@ public class DamageDetector : MonoBehaviour
         Debug.Log(attackInfo.gameObject.name + " hits: " + this.gameObject.name);
         Debug.Log(this.gameObject.name + " hit " + DamagePart.ToString());
 
-        control.CharacterAnimator.runtimeAnimatorController = attackInfo.AttackAbility.GetDeathAnimator();
+        //control.CharacterAnimator.runtimeAnimatorController = attackInfo.AttackAbility.GetDeathAnimator();
+        control.CharacterAnimator.runtimeAnimatorController = DeathAnimationManager.Instance.GetAnimator(DamagePart);
         attackInfo.CurrentHits++;
 
         control.GetComponent<CapsuleCollider>().enabled = false;

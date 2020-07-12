@@ -47,7 +47,7 @@ public class Idle : StateData
             animator.SetBool(TransitionParameter.Crouch.ToString(), true);
         }
 
-        if(characterControl.Attack)
+        if (characterControl.Attack)
         {
             animator.SetBool(TransitionParameter.Attack.ToString(), true);
         }

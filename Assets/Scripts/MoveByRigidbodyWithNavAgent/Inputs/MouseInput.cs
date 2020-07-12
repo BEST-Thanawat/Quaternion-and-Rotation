@@ -63,7 +63,6 @@ public class MouseInput : MonoBehaviour
             VirtualInputManager.Instance.MousePositionVector3 = hit.point;
             if (LeftMouseClick.triggered) //Mouse.current.leftButton.wasPressedThisFrame
             {
-                //Debug.Log(hit.point);
                 VirtualInputManager.Instance.Attack = true;
                 VirtualInputManager.Instance.ClickPosition = hit.point;
                 VirtualInputManager.Instance.MouseLeftClicked = true;

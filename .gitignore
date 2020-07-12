@@ -380,3 +380,5 @@ healthchecksdb
 /PackageToolsEditor.csproj
 /AstarPathfindingProjectEditor.csproj
 /AstarPathfindingProject.csproj
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/Death/Resources/DeathAnimationLoader.prefab
+/Assets/Scripts/MoveByRigidbodyWithNavAgent/Death/FallingBackDeath.asset

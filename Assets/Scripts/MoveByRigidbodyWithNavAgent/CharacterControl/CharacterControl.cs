@@ -129,7 +129,7 @@ public class CharacterControl : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(MouseLeftClicked);
+        //Debug.Log("CC " + Attack);
         ClickToMoveUpdate();
         HoldToMoveUpdate();
     }

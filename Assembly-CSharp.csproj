@@ -114,12 +114,15 @@
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterControl\RigidMover.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\CharacterManager.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\DamageDetector.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Death\DeathAnimationData.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Death\Resources\DeathAnimationLoader.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\EnemyNA.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\InputMaster\InputMaster.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Inputs\KeyboardInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Inputs\ManualInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Inputs\MouseInput.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Managers\AttackManager.cs" />
+    <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Managers\DeathAnimationManager.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Managers\PoolManager.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Managers\Singleton.cs" />
     <Compile Include="Assets\Scripts\MoveByRigidbodyWithNavAgent\Managers\VirtualInputManager.cs" />

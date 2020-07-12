@@ -13,7 +13,7 @@ public class Attack : StateData
     public bool MustFaceAttacker;
     public float LethalRange;
     public int MaxHits;
-    public List<RuntimeAnimatorController> DeathAnimators = new List<RuntimeAnimatorController>();
+    //public List<RuntimeAnimatorController> DeathAnimators = new List<RuntimeAnimatorController>();
 
     private List<AttackInfo> FinishedAttacks = new List<AttackInfo>();
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -116,9 +116,9 @@ public class Attack : StateData
         //}
     }
 
-    public RuntimeAnimatorController GetDeathAnimator()
-    {
-        int index = Random.Range(0, DeathAnimators.Count);
-        return DeathAnimators[index];
-    }
+    //public RuntimeAnimatorController GetDeathAnimator()
+    //{
+    //    int index = Random.Range(0, DeathAnimators.Count);
+    //    return DeathAnimators[index];
+    //}
 }
