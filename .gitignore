@@ -384,3 +384,4 @@ healthchecksdb
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/Death/FallingBackDeath.asset
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/Death/ForwardDeath.asset
 /Assets/Scripts/MoveByRigidbodyWithNavAgent/Death/ForwardDeath.controller
+/Assets/PolygonPrototype

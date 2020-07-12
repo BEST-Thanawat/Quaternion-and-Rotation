@@ -76,9 +76,10 @@ public class CharacterControl : MonoBehaviour
     public bool MouseRightClicked;
     public bool MouseRightHold;
     public Vector3 ClickPosition; //Is hit.point
-    public float StoppingDistance = 0.1f;
+    [Range(0.0f, 1.0f)]
+    public float StoppingDistance = 0.5f;
     [SerializeField] private float remainingDistance = 0;
-    public float RotateSpeed = 2f;
+    public float RotateSpeed = 5f;
     public bool IsArrived = true;
 
     [Header("Kinematic Movement")]
