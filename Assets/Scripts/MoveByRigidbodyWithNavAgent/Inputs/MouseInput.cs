@@ -14,15 +14,21 @@ public class MouseInput : MonoBehaviour
 
     //private Mouse mouse;
     private InputMaster inputMaster;
-    //private InputAction.CallbackContext MouseClick;
+    private InputAction.CallbackContext xx;
     private Vector2 MousePosition;
     private InputAction LeftMouseClick;
     private InputAction LeftMouseHold;
+    private InputAction LeftMouseDoubleClick;
     private InputAction RightMouseClick;
     private InputAction RightMouseHold;
+    private InputAction RightMouseDoubleClick;
 
     private bool TrigLMouseClick = false;
     private bool TrigRMouseClick = false;
+    private bool TrigLMouseHold = false;
+    private bool TrigRMouseHold = false;
+    private bool TrigLMouseDoubleClick = false;
+    private bool TrigRMouseDoubleClick = false;
     //private Quaternion deltaRotation;
     //private Rigidbody rb;
     private void Awake()
@@ -32,28 +38,56 @@ public class MouseInput : MonoBehaviour
 
         inputMaster = new InputMaster();
         inputMaster.Player.MousePosition.performed += context => MousePosition = context.ReadValue<Vector2>();
+
         //inputMaster.Player.MouseClick.performed += context => OnClicked(context);
 
-        LeftMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "press");
+        LeftMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "press"); //(pressPoint=0.4)
         LeftMouseClick.performed += TrigLeftMouseClick;
         LeftMouseClick.canceled += UntrigLeftMouseClick;
+        //LeftMouseClick.performed += context => VirtualInputManager.Instance.MouseLeftClicked = true;
+        //LeftMouseClick.canceled += context => VirtualInputManager.Instance.MouseLeftClicked = false;
+
         RightMouseClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/rightButton", interactions: "press");
         RightMouseClick.performed += TrigRightMouseClick;
         RightMouseClick.canceled += UntrigRightMouseClick;
 
         LeftMouseHold = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "hold(duration=0.8)");
-        LeftMouseHold.performed += context => VirtualInputManager.Instance.MouseLeftHold = true;
-        LeftMouseHold.canceled += context => VirtualInputManager.Instance.MouseLeftHold = false;
+        LeftMouseHold.performed += context =>
+        {
+            TrigLMouseHold = true;
+            VirtualInputManager.Instance.MouseLeftHold = true;
+        };
+        LeftMouseHold.canceled += context =>
+        {
+            TrigLMouseHold = false;
+            VirtualInputManager.Instance.MouseLeftHold = false;
+        };
         RightMouseHold = new InputAction(type: InputActionType.Button, binding: "<Mouse>/rightButton", interactions: "hold(duration=0.8)");
-        RightMouseHold.performed += context => VirtualInputManager.Instance.MouseRightHold = true;
-        RightMouseHold.canceled += context => VirtualInputManager.Instance.MouseRightHold = false;
+        RightMouseHold.performed += context =>
+        {
+            TrigRMouseHold = true;
+            VirtualInputManager.Instance.MouseRightHold = true;
+        };
+        RightMouseHold.canceled += context =>
+        {
+            TrigRMouseHold = false;
+            VirtualInputManager.Instance.MouseRightHold = false;
+        };
+
+        //LeftMouseDoubleClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/leftButton", interactions: "multitap(pressPoint=0.5, tapCount=2, tapDelay=0.5)");
+        //LeftMouseDoubleClick.performed += TrigLeftMouseDoubleClick;
+        //LeftMouseDoubleClick.canceled += UntrigLeftMouseDoubleClick;
+
+        //RightMouseDoubleClick = new InputAction(type: InputActionType.Button, binding: "<Mouse>/rightButton", interactions: "multitap");
+        //RightMouseDoubleClick.performed += context => TrigRMouseDoubleClick = true;
+        //RightMouseDoubleClick.canceled += context => TrigRMouseDoubleClick = false;
     }
-    
+
     void Start()
     {
-        
+
     }
-    
+
     // Update is called once per frame
     private void Update()
     {
@@ -67,7 +101,7 @@ public class MouseInput : MonoBehaviour
         {
             VirtualInputManager.Instance.MousePositionVector3 = hit.point;
 
-            if (TrigLMouseClick)
+            if (TrigLMouseClick && !TrigLMouseHold)
             {
                 VirtualInputManager.Instance.Attack = true;
                 VirtualInputManager.Instance.ClickPosition = hit.point;
@@ -79,7 +113,7 @@ public class MouseInput : MonoBehaviour
                 VirtualInputManager.Instance.MouseLeftClicked = false;
             }
 
-            if (TrigRMouseClick)
+            if (TrigRMouseClick && !TrigRMouseHold)
             {
                 VirtualInputManager.Instance.ClickPosition = hit.point;
                 VirtualInputManager.Instance.MouseRightClicked = true;
@@ -169,6 +203,22 @@ public class MouseInput : MonoBehaviour
     {
         TrigRMouseClick = false;
     }
+    private void TrigLeftMouseDoubleClick(InputAction.CallbackContext context)
+    {
+        TrigLMouseDoubleClick = true;
+    }
+    private void UntrigLeftMouseDoubleClick(InputAction.CallbackContext context)
+    {
+        TrigLMouseDoubleClick = false;
+    }
+    private void TrigRightMouseDoubleClick(InputAction.CallbackContext context)
+    {
+        TrigRMouseDoubleClick = true;
+    }
+    private void UntrigRightMouseDoubleClick(InputAction.CallbackContext context)
+    {
+        TrigRMouseDoubleClick = false;
+    }
     private void OnEnable()
     {
         inputMaster.Player.Enable();
@@ -176,6 +226,8 @@ public class MouseInput : MonoBehaviour
         LeftMouseHold.Enable();
         RightMouseClick.Enable();
         RightMouseHold.Enable();
+        //LeftMouseDoubleClick.Enable();
+        //RightMouseDoubleClick.Enable();
     }
 
     private void OnDisable()
@@ -185,6 +237,8 @@ public class MouseInput : MonoBehaviour
         LeftMouseHold.Disable();
         RightMouseClick.Disable();
         RightMouseHold.Disable();
+        //LeftMouseDoubleClick.Disable();
+        //RightMouseDoubleClick.Disable();
     }
 
     //private void OnDisable() => inputMaster.Player.Disable();

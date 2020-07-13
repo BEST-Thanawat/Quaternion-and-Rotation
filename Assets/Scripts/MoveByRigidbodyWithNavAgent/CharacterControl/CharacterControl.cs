@@ -37,7 +37,7 @@ public class CharacterControl : MonoBehaviour
     public bool PressedD;
     public bool PressedC;
     public bool PressedLShift;
-    
+
     public Vector2 KeyboardPressedValue;
     //public Vector2 RotateValue;
     public bool Jump;
@@ -110,7 +110,7 @@ public class CharacterControl : MonoBehaviour
     {
         get
         {
-            if(rigid == null)
+            if (rigid == null)
             {
                 rigid = GetComponent<Rigidbody>();
             }
@@ -177,14 +177,14 @@ public class CharacterControl : MonoBehaviour
                 c.isTrigger = true;
                 RagdollParts.Add(c);
 
-                if(c.GetComponent<TriggerDetector>() == null)
+                if (c.GetComponent<TriggerDetector>() == null)
                 {
                     c.gameObject.AddComponent<TriggerDetector>();
-                }                
+                }
             }
         }
     }
-    
+
     public static Vector3 ExtractDotVector(Vector3 _vector, Vector3 _direction)
     {
         //Normalize vector if necessary;
@@ -226,8 +226,9 @@ public class CharacterControl : MonoBehaviour
 
     private void ClickToMoveUpdate()
     {
-        if (MouseRightClicked)
+        if (MouseRightClicked) //&& !MouseRightHold
         {
+            remainingDistance = 0;
             triggerRightClicked = true;
             path = null;
             seeker.StartPath(RIGID_BODY.position, ClickPosition);
@@ -239,6 +240,7 @@ public class CharacterControl : MonoBehaviour
     {
         if (MouseRightHold)
         {
+            remainingDistance = 0;
             triggerRightHold = true;
             triggerRightClicked = false;
             path = null;
@@ -254,6 +256,7 @@ public class CharacterControl : MonoBehaviour
     {
         if (triggerRightHold && path == null)
         {
+            IsArrived = false;
             isMoving = true;
             path = null;
 
@@ -273,7 +276,7 @@ public class CharacterControl : MonoBehaviour
             //Debug.Log(currentWaypoint);
             relativePosition = path.vectorPath[currentWaypoint] - RIGID_BODY.position;
             relativePosition.y = 0f;
-            if(relativePosition != Vector3.zero)
+            if (relativePosition != Vector3.zero)
             {
                 targetRotation = Quaternion.LookRotation(relativePosition);
             }
@@ -301,6 +304,9 @@ public class CharacterControl : MonoBehaviour
             }
         }
 
+
+        Debug.Log(triggerRightHold);
+        Debug.Log(triggerRightClicked);
         if (!triggerRightHold && !triggerRightClicked)
         {
             IsArrived = true;
@@ -467,6 +473,21 @@ public class CharacterControl : MonoBehaviour
         GameObject bottomLeftLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(left, top / 3, 0f));
         GameObject bottomRightLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(right, top / 3, 0f));
 
+
+        //Lv1 sensors diagonal
+        float offset = Vector3.Distance(capsule.bounds.extents, capsule.bounds.center) / 2;
+        GameObject bottomFrontRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(offset, GroundCheckOffset, offset));
+        GameObject bottomBackLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(-offset, GroundCheckOffset, -offset));
+        GameObject bottomFrontLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(-offset, GroundCheckOffset, offset));
+        GameObject bottomBackRight = CreateEdgeSphere(this.transform.localPosition + new Vector3(offset, GroundCheckOffset, -offset));
+
+        //Lv2 sensors diagonal
+        GameObject bottomFrontRightLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(offset, top / 3, offset));
+        GameObject bottomBackLeftLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(-offset, top / 3, -offset));
+        GameObject bottomFrontLeftLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(-offset, top / 3, offset));
+        GameObject bottomBackRightLV2 = CreateEdgeSphere(this.transform.localPosition + new Vector3(offset, top / 3, -offset));
+
+
         //GameObject checkFront = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, front - 0.02f));
         //GameObject checkBack = CreateEdgeSphere(this.transform.localPosition + new Vector3(0, top, back + 0.025f));
         //GameObject checkLeft = CreateEdgeSphere(this.transform.localPosition + new Vector3(left + 0.02f, top, 0f));
@@ -493,6 +514,16 @@ public class CharacterControl : MonoBehaviour
         bottomLeftLV2.transform.parent = this.transform;
         bottomRightLV2.transform.parent = this.transform;
 
+        //Lv1/Lv2 sensors diagonal
+        bottomFrontRight.transform.parent = this.transform;
+        bottomBackLeft.transform.parent = this.transform;
+        bottomFrontLeft.transform.parent = this.transform;
+        bottomBackRight.transform.parent = this.transform;
+        bottomFrontRightLV2.transform.parent = this.transform;
+        bottomBackLeftLV2.transform.parent = this.transform;
+        bottomFrontLeftLV2.transform.parent = this.transform;
+        bottomBackRightLV2.transform.parent = this.transform;
+
         BottomSpheres.Add(bottomFront);
         BottomSpheres.Add(bottomBack);
         BottomSpheres.Add(bottomLeft);
@@ -502,6 +533,16 @@ public class CharacterControl : MonoBehaviour
         BottomSpheres.Add(bottomBackLV2);
         BottomSpheres.Add(bottomLeftLV2);
         BottomSpheres.Add(bottomRightLV2);
+
+        //Lv1/Lv2 sensors diagonal
+        BottomSpheres.Add(bottomFrontRight);
+        BottomSpheres.Add(bottomBackLeft);
+        BottomSpheres.Add(bottomFrontLeft);
+        BottomSpheres.Add(bottomBackRight);
+        BottomSpheres.Add(bottomFrontRightLV2);
+        BottomSpheres.Add(bottomBackLeftLV2);
+        BottomSpheres.Add(bottomFrontLeftLV2);
+        BottomSpheres.Add(bottomBackRightLV2);
 
         FrontSpheres.Add(bottomFront);
         FrontSpheres.Add(topFront);
